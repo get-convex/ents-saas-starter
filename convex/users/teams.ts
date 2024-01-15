@@ -44,18 +44,42 @@ export const create = mutation({
       userId: ctx.viewerX()._id,
       roleId: (await getRole(ctx, "Admin"))._id,
     });
+    return slug;
+  },
+});
+
+export const deleteTeam = mutation({
+  args: {
+    teamId: v.id("teams"),
+  },
+  async handler(ctx, { teamId }) {
+    const member = await ctx
+      .table("members", "teamUser", (q) =>
+        q.eq("teamId", teamId).eq("userId", ctx.viewerX()._id)
+      )
+      .uniqueX();
+    if ((await member.edge("role")).name !== "Admin") {
+      throw new Error("Only admins can delete teams");
+    }
+    const team = await ctx.table("teams").getX(teamId);
+    await team.delete();
+    if (team.isPersonal) {
+      await ctx.viewerX().delete();
+    }
   },
 });
 
 export async function getUniqueSlug(ctx: QueryCtx, name: string) {
-  const slug = slugify(name);
+  const base = slugify(name);
+  let slug;
   let n = 0;
   for (;;) {
+    slug = n === 0 ? base : `${base}-${n}`;
     const existing = await ctx.table("teams").get("slug", slug);
     if (existing === null) {
       break;
     }
     n++;
   }
-  return n === 0 ? slug : `${slug}-${n}`;
+  return slug;
 }

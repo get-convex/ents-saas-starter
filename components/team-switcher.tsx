@@ -6,6 +6,7 @@ import {
   PlusCircledIcon,
 } from "@radix-ui/react-icons";
 
+import { useCurrentTeam } from "@/app/(dashboard)/[teamSlug]/hooks";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -47,50 +48,53 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/convex/_generated/api";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "convex/react";
 import Link from "next/link";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export default function TeamSwitcher() {
-  const { teamSlug } = useParams();
   const pathname = usePathname();
   const teams = useQuery(api.users.teams.list);
+  const selectedTeam = useCurrentTeam();
   const createTeam = useMutation(api.users.teams.create);
-  // const handleCreateTeam = (data) => {};
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
+    defaultValues: {
+      name: "",
+    },
   });
 
   const [open, setOpen] = useState(false);
   const [showNewTeamDialog, setShowNewTeamDialog] = useState(false);
+  const handleShowNewTeamDialog = (state: boolean) => {
+    form.reset();
+    setShowNewTeamDialog(state);
+  };
+
   const router = useRouter();
 
-  if (teams == null) {
+  if (teams == null || selectedTeam == null) {
     return <Skeleton className="w-40 h-9" />;
   }
 
+  const personalTeams = teams.filter((team) => team.isPersonal);
+  const nonPersonalTeams = teams.filter((team) => !team.isPersonal);
   const groups = [
-    {
-      label: "Personal Account",
-      teams: teams?.filter((team) => team.isPersonal) ?? [],
-    },
-    {
-      label: "Teams",
-      teams: teams?.filter((team) => !team.isPersonal) ?? [],
-    },
+    { label: "Personal Account", teams: personalTeams },
+    ...(nonPersonalTeams.length > 0
+      ? [{ label: "Teams", teams: nonPersonalTeams }]
+      : []),
   ];
-  const selectedTeam =
-    teams?.find((team) => team.slug === teamSlug) ?? groups[0]?.teams[0];
 
   return (
-    <Dialog open={showNewTeamDialog} onOpenChange={setShowNewTeamDialog}>
+    <Dialog open={showNewTeamDialog} onOpenChange={handleShowNewTeamDialog}>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -172,7 +176,7 @@ export default function TeamSwitcher() {
                     className="cursor-pointer"
                     onSelect={() => {
                       setOpen(false);
-                      setShowNewTeamDialog(true);
+                      handleShowNewTeamDialog(true);
                     }}
                   >
                     <PlusCircledIcon className="mr-2 h-5 w-5" />
@@ -190,7 +194,9 @@ export default function TeamSwitcher() {
             className="flex flex-col gap-4"
             onSubmit={
               form.handleSubmit(async ({ name }) => {
-                await createTeam({ name });
+                const teamSlug = await createTeam({ name });
+                handleShowNewTeamDialog(false);
+                router.push(`/${teamSlug}`);
               }) as any
             }
           >
@@ -243,7 +249,7 @@ export default function TeamSwitcher() {
             <DialogFooter>
               <Button
                 variant="outline"
-                onClick={() => setShowNewTeamDialog(false)}
+                onClick={() => handleShowNewTeamDialog(false)}
               >
                 Cancel
               </Button>

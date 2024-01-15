@@ -11,7 +11,11 @@ const schema = defineEntSchema(
       .field("slug", v.string(), { unique: true })
       .edges("members"),
 
-    members: defineEnt({}).edge("team").edge("user").edge("role"),
+    members: defineEnt({})
+      .edge("team")
+      .edge("user")
+      .edge("role")
+      .index("teamUser", ["teamId", "userId"]),
 
     roles: defineEnt({})
       .field("name", vRole, { unique: true })

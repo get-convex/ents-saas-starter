@@ -1,5 +1,4 @@
 import { cn, fr } from "@/lib/utils";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const StickySidebar = fr(function StickySidebar(
   { className, children, ...props },
@@ -7,7 +6,7 @@ export const StickySidebar = fr(function StickySidebar(
 ) {
   return (
     <aside ref={ref} className={cn("sticky", className)} {...props}>
-      <ScrollArea className="h-full">{children}</ScrollArea>
+      {children}
     </aside>
   );
 });
