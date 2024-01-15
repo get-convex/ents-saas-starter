@@ -4,50 +4,39 @@ import {
   customQuery,
 } from "convex-helpers/server/customFunctions";
 import {
-  query as baseQuery,
-  mutation as baseMutation,
-  internalQuery as baseInternalQuery,
   internalMutation as baseInternalMutation,
+  internalQuery as baseInternalQuery,
+  mutation as baseMutation,
+  query as baseQuery,
 } from "./_generated/server";
-import { entsTableFactory, entsTableWriterFactory } from "convex-ents";
-import { entDefinitions } from "./schema";
+import { mutationCtxWithRules, queryCtxWithRules } from "./rules";
 
 export const query = customQuery(
   baseQuery,
-  customCtx(async (ctx) => {
-    return {
-      table: entsTableFactory(ctx, entDefinitions),
-      db: undefined,
-    };
+  customCtx(async (baseCtx) => {
+    const { ctx } = await queryCtxWithRules(baseCtx);
+    return ctx;
   })
 );
 
 export const internalQuery = customQuery(
   baseInternalQuery,
-  customCtx(async (ctx) => {
-    return {
-      table: entsTableFactory(ctx, entDefinitions),
-      db: undefined,
-    };
+  customCtx(async (baseCtx) => {
+    const { ctx } = await queryCtxWithRules(baseCtx);
+    return ctx;
   })
 );
 
 export const mutation = customMutation(
   baseMutation,
-  customCtx(async (ctx) => {
-    return {
-      table: entsTableWriterFactory(ctx, entDefinitions),
-      db: undefined,
-    };
+  customCtx(async (baseCtx) => {
+    return await mutationCtxWithRules(baseCtx);
   })
 );
 
 export const internalMutation = customMutation(
   baseInternalMutation,
-  customCtx(async (ctx) => {
-    return {
-      table: entsTableWriterFactory(ctx, entDefinitions),
-      db: undefined,
-    };
+  customCtx(async (baseCtx) => {
+    return await mutationCtxWithRules(baseCtx);
   })
 );

@@ -1,5 +1,6 @@
 import { mutation } from "./functions";
 import { getRole } from "./permissions";
+import { getUniqueSlug } from "./users/teams";
 
 export const store = mutation({
   args: {},
@@ -26,9 +27,11 @@ export const store = mutation({
         lastName: identity.familyName!,
       })
       .get();
+    const name = `${user.firstName}'s Team`;
+    const slug = await getUniqueSlug(ctx, identity.nickname ?? name);
     const teamId = await ctx.table("teams").insert({
-      name: `${user.firstName}'s Team`,
-      slug: identity.nickname!,
+      name,
+      slug,
       isPersonal: true,
     });
     await ctx.table("members").insert({
