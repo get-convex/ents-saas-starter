@@ -18,7 +18,9 @@ const schema = defineEntSchema(
       .edge("role")
       .index("teamUser", ["teamId", "userId"]),
 
-    invites: defineEnt({})
+    invites: defineEnt({
+      inviterEmail: v.string(),
+    })
       .field("email", v.string(), { unique: true })
       .edge("team")
       .edge("role"),
@@ -34,10 +36,10 @@ const schema = defineEntSchema(
       .edges("roles"),
 
     users: defineEnt({
-      firstName: v.string(),
-      lastName: v.string(),
+      firstName: v.optional(v.string()),
+      lastName: v.optional(v.string()),
       fullName: v.string(),
-      pictureUrl: v.string(),
+      pictureUrl: v.optional(v.string()),
       email: v.string(),
     })
       .field("tokenIdentifier", v.string(), { unique: true })

@@ -16,18 +16,22 @@ export const store = mutation({
     if (existingUser !== null) {
       return;
     }
+    if (identity.email === undefined) {
+      throw new Error("User does not have an email address");
+    }
+    const nameFallback = emailUserName(identity.email);
     const user = await ctx
       .table("users")
       .insert({
-        fullName: identity.name!,
+        fullName: identity.name ?? nameFallback,
         tokenIdentifier: identity.tokenIdentifier,
-        email: identity.email!,
-        pictureUrl: identity.pictureUrl!,
-        firstName: identity.givenName!,
-        lastName: identity.familyName!,
+        email: identity.email,
+        pictureUrl: identity.pictureUrl,
+        firstName: identity.givenName,
+        lastName: identity.familyName,
       })
       .get();
-    const name = `${user.firstName ?? emailUserName(user.email)}'s Team`;
+    const name = `${user.firstName ?? nameFallback}'s Team`;
     const slug = await getUniqueSlug(ctx, identity.nickname ?? name);
     const teamId = await ctx.table("teams").insert({
       name,

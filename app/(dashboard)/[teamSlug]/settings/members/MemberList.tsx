@@ -95,7 +95,7 @@ function MembersTable({
             </TableCell>
             <TableCell width={10}>
               <DropdownMenu>
-                <DropdownMenuTrigger disabled={!hasManagePermission}>
+                <DropdownMenuTrigger asChild>
                   <Button
                     disabled={!hasManagePermission}
                     variant="ghost"
@@ -165,7 +165,7 @@ function InvitesTable({
             </TableCell>
             <TableCell width={10}>
               <DropdownMenu>
-                <DropdownMenuTrigger disabled={!hasManagePermission}>
+                <DropdownMenuTrigger asChild>
                   <Button
                     disabled={!hasManagePermission}
                     variant="ghost"

@@ -34,6 +34,7 @@ export const create = mutation({
   async handler(ctx, { teamId, email, role }) {
     await viewerHasPermissionX(ctx, teamId, "Manage Members");
     await ctx.table("invites").insert({
+      inviterEmail: ctx.viewerX().email,
       teamId: teamId,
       email: email,
       roleId: role,

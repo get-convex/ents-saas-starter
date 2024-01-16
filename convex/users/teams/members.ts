@@ -41,7 +41,10 @@ export const list = query({
           fullName: user.fullName,
           email: user.email,
           pictureUrl: user.pictureUrl,
-          initials: user.firstName[0] + user.lastName[0],
+          initials:
+            user.firstName === undefined || user.lastName === undefined
+              ? user.fullName[0]
+              : user.firstName[0] + user.lastName[0],
           roleId: member.roleId,
         };
       });

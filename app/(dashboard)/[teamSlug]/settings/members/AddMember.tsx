@@ -77,7 +77,11 @@ export function AddMember() {
                 <FormItem className="flex-grow">
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="jane@doe.com" {...field} />
+                    <Input
+                      placeholder="jane@doe.com"
+                      autoComplete="new-password"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

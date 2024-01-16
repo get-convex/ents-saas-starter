@@ -1,3 +1,4 @@
+import { Notifications } from "@/app/(dashboard)/Notifications";
 import { RedirectToHome } from "@/app/(dashboard)/RedirectToHome";
 import { TeamMenu } from "@/app/(dashboard)/TeamMenu";
 import { ProfileButton } from "@/app/(dashboard)/[teamSlug]/ProfileButton";
@@ -14,11 +15,13 @@ export default function DashboardLayout({
   return (
     <ConvexClientProvider>
       <RedirectToHome />
-
       <StickyHeader className="px-4 py-2 flex flex-col gap-2">
         <div className="flex justify-between items-center">
           <TeamSwitcher />
-          <ProfileButton />
+          <div className="flex items-center gap-4">
+            <Notifications />
+            <ProfileButton />
+          </div>
         </div>
         <TeamMenu />
       </StickyHeader>
