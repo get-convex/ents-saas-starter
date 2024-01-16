@@ -16,18 +16,14 @@ export function SelectRole({
 }: {
   disabled?: boolean;
   onChange?: (value: Id<"roles">) => void;
-  value?: Id<"roles">;
+  value: Id<"roles">;
 }) {
   const availableRoles = useQuery(api.users.teams.roles.list);
   if (availableRoles == null) {
     return null;
   }
   return (
-    <Select
-      disabled={disabled}
-      onValueChange={onChange}
-      value={value ?? availableRoles.filter((role) => role.isDefault)[0].id}
-    >
+    <Select disabled={disabled} onValueChange={onChange} value={value}>
       <SelectTrigger className="w-[8rem]">
         <SelectValue />
       </SelectTrigger>

@@ -1,11 +1,10 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-
 import {
   useCurrentTeam,
   useViewerPermissions,
 } from "@/app/(dashboard)/[teamSlug]/hooks";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardDescription,
@@ -13,9 +12,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { cn } from "@/lib/utils";
+import { useMutation } from "convex/react";
 
 export default function GeneralSettingsPage() {
   const team = useCurrentTeam();

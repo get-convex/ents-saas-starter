@@ -9,13 +9,19 @@ const schema = defineEntSchema(
       isPersonal: v.boolean(),
     })
       .field("slug", v.string(), { unique: true })
-      .edges("members"),
+      .edges("members", { ref: true })
+      .edges("invites", { ref: true }),
 
     members: defineEnt({})
       .edge("team")
       .edge("user")
       .edge("role")
       .index("teamUser", ["teamId", "userId"]),
+
+    invites: defineEnt({})
+      .field("email", v.string(), { unique: true })
+      .edge("team")
+      .edge("role"),
 
     roles: defineEnt({
       isDefault: v.boolean(),
@@ -35,7 +41,7 @@ const schema = defineEntSchema(
       email: v.string(),
     })
       .field("tokenIdentifier", v.string(), { unique: true })
-      .edges("members"),
+      .edges("members", { ref: true }),
   },
   { schemaValidation: false }
 );
