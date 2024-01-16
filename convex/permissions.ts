@@ -1,5 +1,6 @@
 import { Infer, v } from "convex/values";
 import { QueryCtx } from "./types";
+import { Id } from "./_generated/dataModel";
 
 export const vPermission = v.union(
   v.literal("Manage Team"),
@@ -18,4 +19,23 @@ export async function getPermission(ctx: QueryCtx, name: Permission) {
 
 export async function getRole(ctx: QueryCtx, name: Role) {
   return await ctx.table("roles").getX("name", name);
+}
+
+export async function viewerHasPermissionX(
+  ctx: QueryCtx,
+  teamId: Id<"teams">,
+  name: Permission
+) {
+  if (
+    !(await ctx
+      .table("members", "teamUser", (q) =>
+        q.eq("teamId", teamId).eq("userId", ctx.viewerX()._id)
+      )
+      .uniqueX()
+      .edge("role")
+      .edge("permissions")
+      .has(await getPermission(ctx, name)))
+  ) {
+    throw new Error("Only admins can delete teams");
+  }
 }

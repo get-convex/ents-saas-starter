@@ -18,6 +18,8 @@ import type * as functions from "../functions.js";
 import type * as init from "../init.js";
 import type * as permissions from "../permissions.js";
 import type * as types from "../types.js";
+import type * as users_teams_members from "../users/teams/members.js";
+import type * as users_teams_roles from "../users/teams/roles.js";
 import type * as users_teams from "../users/teams.js";
 import type * as users from "../users.js";
 import type * as utils from "../utils.js";
@@ -35,6 +37,8 @@ declare const fullApi: ApiFromModules<{
   init: typeof init;
   permissions: typeof permissions;
   types: typeof types;
+  "users/teams/members": typeof users_teams_members;
+  "users/teams/roles": typeof users_teams_roles;
   "users/teams": typeof users_teams;
   users: typeof users;
   utils: typeof utils;

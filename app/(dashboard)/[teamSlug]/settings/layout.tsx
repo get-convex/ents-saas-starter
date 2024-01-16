@@ -11,7 +11,9 @@ export default function SettingsLayout({
       <StickySidebar className="hidden sm:block top-[calc(6rem+1px)] h-[calc(100vh-(6rem+1px))] py-8">
         <SettingsMenu />
       </StickySidebar>
-      <main className="min-h-[calc(100vh-(6rem+1px))]">{children}</main>
+      <main className="min-h-[calc(100vh-(6rem+1px))] flex flex-col gap-6">
+        {children}
+      </main>
     </div>
   );
 }

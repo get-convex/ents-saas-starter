@@ -1,15 +1,19 @@
 "use client";
 
+import { useCurrentTeam } from "@/app/(dashboard)/[teamSlug]/hooks";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { ReactNode } from "react";
 
 export function SettingsMenu() {
+  const team = useCurrentTeam();
   return (
     <div className="flex flex-col gap-2 items-stretch">
       <NavLink relativeHref="">General</NavLink>
-      <NavLink relativeHref="/members">Members</NavLink>
+      {team?.isPersonal ? null : (
+        <NavLink relativeHref="/members">Members</NavLink>
+      )}
     </div>
   );
 }

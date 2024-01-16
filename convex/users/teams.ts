@@ -1,8 +1,8 @@
 import { v } from "convex/values";
 import { mutation, query } from "../functions";
-import { slugify } from "../utils";
+import { getRole, viewerHasPermissionX } from "../permissions";
 import { QueryCtx } from "../types";
-import { getRole } from "../permissions";
+import { slugify } from "../utils";
 
 export const defaultToAccess = query({
   args: {},
@@ -53,14 +53,7 @@ export const deleteTeam = mutation({
     teamId: v.id("teams"),
   },
   async handler(ctx, { teamId }) {
-    const member = await ctx
-      .table("members", "teamUser", (q) =>
-        q.eq("teamId", teamId).eq("userId", ctx.viewerX()._id)
-      )
-      .uniqueX();
-    if ((await member.edge("role")).name !== "Admin") {
-      throw new Error("Only admins can delete teams");
-    }
+    await viewerHasPermissionX(ctx, teamId, "Delete Team");
     const team = await ctx.table("teams").getX(teamId);
     await team.delete();
     if (team.isPersonal) {

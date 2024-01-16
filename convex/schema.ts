@@ -17,7 +17,9 @@ const schema = defineEntSchema(
       .edge("role")
       .index("teamUser", ["teamId", "userId"]),
 
-    roles: defineEnt({})
+    roles: defineEnt({
+      isDefault: v.boolean(),
+    })
       .field("name", vRole, { unique: true })
       .edges("permissions"),
 

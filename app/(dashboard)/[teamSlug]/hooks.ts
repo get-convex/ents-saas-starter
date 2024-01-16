@@ -19,3 +19,11 @@ export function useCurrentTeam() {
   }, [currentTeam, pathname, router, teamSlug]);
   return currentTeam;
 }
+
+export function useViewerPermissions() {
+  const team = useCurrentTeam();
+  const permissions = useQuery(api.users.teams.members.viewerPermissions, {
+    teamId: team?._id,
+  });
+  return permissions == null ? null : new Set(permissions);
+}
