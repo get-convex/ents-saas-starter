@@ -27,7 +27,7 @@ export const store = mutation({
         lastName: identity.familyName!,
       })
       .get();
-    const name = `${user.firstName}'s Team`;
+    const name = `${user.firstName ?? emailUserName(user.email)}'s Team`;
     const slug = await getUniqueSlug(ctx, identity.nickname ?? name);
     const teamId = await ctx.table("teams").insert({
       name,
@@ -41,3 +41,7 @@ export const store = mutation({
     });
   },
 });
+
+function emailUserName(email: string) {
+  return email.split("@")[0];
+}
