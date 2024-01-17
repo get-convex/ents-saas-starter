@@ -1,10 +1,10 @@
-import ConvexClientProvider from "@/app/ConvexClientProvider";
+import { ConvexClientProvider } from "@/app/ConvexClientProvider";
 import { AcceptInviteDialog } from "@/app/t/AcceptInviteDialog";
 import { Notifications } from "@/app/t/Notifications";
 import { TeamMenu } from "@/app/t/TeamMenu";
 import { ProfileButton } from "@/app/t/[teamSlug]/ProfileButton";
 import { StickyHeader } from "@/components/layout/sticky-header";
-import TeamSwitcher from "@/components/team-switcher";
+import { TeamSwitcher } from "@/app/t/TeamSwitcher";
 import { Toaster } from "@/components/ui/toaster";
 
 export default function DashboardLayout({

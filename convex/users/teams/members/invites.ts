@@ -21,7 +21,7 @@ export const list = query({
       return null;
     }
     await viewerHasPermissionX(ctx, teamId, "Read Members");
-    return ctx
+    return await ctx
       .table("teams")
       .getX(teamId)
       .edge("invites")

@@ -26,7 +26,7 @@ export const list = query({
     if (ctx.viewer === null) {
       return null;
     }
-    return ctx.viewer
+    return await ctx.viewer
       .edge("members")
       .map((member) => member.edge("team").doc());
   },

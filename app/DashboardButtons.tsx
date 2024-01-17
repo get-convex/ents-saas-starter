@@ -1,6 +1,6 @@
 "use client";
 
-import ConvexClientProvider from "@/app/ConvexClientProvider";
+import { ConvexClientProvider } from "@/app/ConvexClientProvider";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/convex/_generated/api";
