@@ -6,7 +6,7 @@ import {
   PlusCircledIcon,
 } from "@radix-ui/react-icons";
 
-import { useCurrentTeam } from "@/app/(dashboard)/[teamSlug]/hooks";
+import { useCurrentTeam } from "@/app/t/[teamSlug]/hooks";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -135,9 +135,9 @@ export default function TeamSwitcher() {
                       <Link
                         className="flex justify-between items-center"
                         href={{
-                          pathname: `/${team.slug}/${pathname
+                          pathname: `/t/${team.slug}/${pathname
                             .split("/")
-                            .slice(2)
+                            .slice(3)
                             .join("/")}`,
                         }}
                         onClick={(event) => {

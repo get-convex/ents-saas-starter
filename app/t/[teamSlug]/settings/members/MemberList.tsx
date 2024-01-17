@@ -1,8 +1,5 @@
-import {
-  useCurrentTeam,
-  useViewerPermissions,
-} from "@/app/(dashboard)/[teamSlug]/hooks";
-import { SelectRole } from "@/app/(dashboard)/[teamSlug]/settings/members/SelectRole";
+import { useCurrentTeam, useViewerPermissions } from "@/app/t/[teamSlug]/hooks";
+import { SelectRole } from "@/app/t/[teamSlug]/settings/members/SelectRole";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {

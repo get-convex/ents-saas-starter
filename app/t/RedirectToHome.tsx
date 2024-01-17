@@ -15,6 +15,7 @@ export function RedirectToHome() {
 function Redirect() {
   const router = useRouter();
   useEffect(() => {
+    console.log("Redirecting to home");
     void router.push("/");
   }, [router]);
   return null;

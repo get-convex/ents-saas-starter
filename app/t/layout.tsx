@@ -1,7 +1,7 @@
-import { Notifications } from "@/app/(dashboard)/Notifications";
-import { RedirectToHome } from "@/app/(dashboard)/RedirectToHome";
-import { TeamMenu } from "@/app/(dashboard)/TeamMenu";
-import { ProfileButton } from "@/app/(dashboard)/[teamSlug]/ProfileButton";
+import { Notifications } from "@/app/t/Notifications";
+import { RedirectToHome } from "@/app/t/RedirectToHome";
+import { TeamMenu } from "@/app/t/TeamMenu";
+import { ProfileButton } from "@/app/t/[teamSlug]/ProfileButton";
 import ConvexClientProvider from "@/app/ConvexClientProvider";
 import { StickyHeader } from "@/components/layout/sticky-header";
 import TeamSwitcher from "@/components/team-switcher";

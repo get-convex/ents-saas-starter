@@ -1,4 +1,4 @@
-import { SettingsMenu } from "@/app/(dashboard)/[teamSlug]/settings/SettingsMenu";
+import { SettingsMenu } from "@/app/t/[teamSlug]/settings/SettingsMenu";
 import { StickySidebar } from "@/components/layout/sticky-sidebar";
 
 export default function SettingsLayout({

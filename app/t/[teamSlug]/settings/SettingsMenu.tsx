@@ -1,6 +1,6 @@
 "use client";
 
-import { useCurrentTeam } from "@/app/(dashboard)/[teamSlug]/hooks";
+import { useCurrentTeam } from "@/app/t/[teamSlug]/hooks";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
@@ -27,7 +27,7 @@ function NavLink({
 }) {
   const currentPath = usePathname();
   const { teamSlug } = useParams();
-  const linkPath = `/${teamSlug as string}/settings${relativeHref}`;
+  const linkPath = `/t/${teamSlug as string}/settings${relativeHref}`;
   const active =
     relativeHref === ""
       ? currentPath === linkPath

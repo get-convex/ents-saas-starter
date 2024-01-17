@@ -13,7 +13,7 @@ export function useCurrentTeam() {
   useEffect(() => {
     if (currentTeam !== undefined && currentTeam.slug !== teamSlug) {
       router.push(
-        `/${currentTeam.slug}/${pathname.split("/").slice(2).join("/")}`
+        `/t/${currentTeam.slug}/${pathname.split("/").slice(3).join("/")}`
       );
     }
   }, [currentTeam, pathname, router, teamSlug]);

@@ -23,7 +23,7 @@ function NavLink({
 }) {
   const currentPath = usePathname();
   const { teamSlug } = useParams();
-  const linkPath = `/${teamSlug as string}${relativeHref}`;
+  const linkPath = `/t/${teamSlug as string}${relativeHref}`;
   const active =
     relativeHref === ""
       ? currentPath === linkPath

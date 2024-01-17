@@ -41,7 +41,7 @@ export function Notifications() {
               onSelect={
                 (async () => {
                   const teamSlug = await acceptInvite({ inviteId: invite._id });
-                  router.push(`/${teamSlug}`);
+                  router.push(`/t/${teamSlug}`);
                 }) as any
               }
             >

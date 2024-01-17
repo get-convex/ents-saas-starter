@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  useCurrentTeam,
-  useViewerPermissions,
-} from "@/app/(dashboard)/[teamSlug]/hooks";
+import { useCurrentTeam, useViewerPermissions } from "@/app/t/[teamSlug]/hooks";
 import { Button } from "@/components/ui/button";
 import {
   Card,

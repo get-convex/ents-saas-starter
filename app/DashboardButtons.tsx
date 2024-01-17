@@ -24,7 +24,7 @@ export function DashboardButtons() {
       </Authenticated>
       <Unauthenticated>
         <div className="flex gap-4">
-          <SignInButton mode="modal">
+          <SignInButton mode="modal" redirectUrl="/t">
             <Button variant="ghost">Sign in</Button>
           </SignInButton>
           <SignUpButton mode="modal">
@@ -39,7 +39,7 @@ export function DashboardButtons() {
 function OpenDashboardLinkButton() {
   const defaultTeam = useQuery(api.users.teams.defaultToAccess);
   return (
-    <Link href={`/${defaultTeam?.slug}`}>
+    <Link href={`/t/${defaultTeam?.slug}`}>
       <Button>Dashboard</Button>
     </Link>
   );

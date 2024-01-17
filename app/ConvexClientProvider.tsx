@@ -3,7 +3,7 @@
 import { ReactNode, useEffect } from "react";
 import { Authenticated, ConvexReactClient, useMutation } from "convex/react";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
-import { ClerkProvider, useAuth, useUser } from "@clerk/clerk-react";
+import { ClerkProvider, useAuth, useUser } from "@clerk/nextjs";
 import { ErrorBoundary } from "./ErrorBoundary";
 import { api } from "@/convex/_generated/api";
 
