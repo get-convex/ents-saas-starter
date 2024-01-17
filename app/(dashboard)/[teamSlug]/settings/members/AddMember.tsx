@@ -2,41 +2,39 @@ import {
   useCurrentTeam,
   useViewerPermissions,
 } from "@/app/(dashboard)/[teamSlug]/hooks";
+import { SelectRole } from "@/app/(dashboard)/[teamSlug]/settings/members/SelectRole";
 import { Button } from "@/components/ui/button";
-import { zid } from "convex-helpers/server/zod";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { api } from "@/convex/_generated/api";
-import { PlusIcon } from "@radix-ui/react-icons";
-import { useMutation, useQuery } from "convex/react";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { SelectRole } from "@/app/(dashboard)/[teamSlug]/settings/members/SelectRole";
+import { Input } from "@/components/ui/input";
+import { toast } from "@/components/ui/use-toast";
+import { api } from "@/convex/_generated/api";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { PlusIcon } from "@radix-ui/react-icons";
+import { zid } from "convex-helpers/server/zod";
+import { useAction, useQuery } from "convex/react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Input } from "@/components/ui/input";
-import { useEffect } from "react";
-import { toast } from "@/components/ui/use-toast";
 
 export function AddMember() {
   const team = useCurrentTeam();
   const permissions = useViewerPermissions();
   const availableRoles = useQuery(api.users.teams.roles.list);
-  const createInvite = useMutation(api.users.teams.members.invites.create);
+  const sendInvite = useAction(api.users.teams.members.invites.send);
   const defaultRole = availableRoles?.filter((role) => role.isDefault)[0].id;
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -63,7 +61,7 @@ export function AddMember() {
           <form
             onSubmit={
               form.handleSubmit(async ({ email, role }) => {
-                await createInvite({ email, role, teamId: team._id });
+                await sendInvite({ email, roleId: role, teamId: team._id });
                 form.reset();
                 toast({ title: "Member invite created." });
               }) as any
