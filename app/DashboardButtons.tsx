@@ -37,9 +37,9 @@ export function DashboardButtons() {
 }
 
 function OpenDashboardLinkButton() {
-  const defaultTeam = useQuery(api.users.teams.defaultToAccess);
+  const defaultTeamSlug = useQuery(api.users.teams.defaultToAccess);
   return (
-    <Link href={`/t/${defaultTeam?.slug}`}>
+    <Link href={`/t/${defaultTeamSlug}`}>
       <Button>Dashboard</Button>
     </Link>
   );

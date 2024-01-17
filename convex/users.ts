@@ -1,20 +1,20 @@
 import { mutation } from "./functions";
 import { getRole } from "./permissions";
-import { getUniqueSlug } from "./users/teams";
+import { defaultToAccessTeamSlug, getUniqueSlug } from "./users/teams";
 
 export const store = mutation({
   args: {},
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Called storeUser without authentication present");
+    if (identity === null) {
+      throw new Error("Called api.users.store without valid auth token");
     }
 
     const existingUser = await ctx
       .table("users")
       .get("tokenIdentifier", identity.tokenIdentifier);
     if (existingUser !== null) {
-      return;
+      return defaultToAccessTeamSlug(existingUser);
     }
     if (identity.email === undefined) {
       throw new Error("User does not have an email address");
@@ -43,6 +43,7 @@ export const store = mutation({
       userId: user._id,
       roleId: (await getRole(ctx, "Admin"))._id,
     });
+    return slug;
   },
 });
 

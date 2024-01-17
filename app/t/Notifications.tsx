@@ -11,15 +11,33 @@ import {
 import { api } from "@/convex/_generated/api";
 import { BellIcon } from "@radix-ui/react-icons";
 import { useMutation, useQuery } from "convex/react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export function Notifications() {
   const router = useRouter();
   const invites = useQuery(api.invites.list);
   const acceptInvite = useMutation(api.invites.accept);
   const noInvites = (invites ?? []).length === 0;
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [showNotifs, setShowNotifs] = useState(false);
+  const forceShowNotifs = searchParams.get("showNotifs") !== null;
+  useEffect(() => {
+    if (forceShowNotifs) {
+      setShowNotifs(true);
+      const newSearchParams = new URLSearchParams(searchParams);
+      newSearchParams.delete("showNotifs");
+      const newSearchParamsString = newSearchParams.toString();
+      router.replace(
+        `${pathname}${
+          newSearchParamsString.length > 0 ? `?${newSearchParamsString}` : ""
+        }`
+      );
+    }
+  }, [forceShowNotifs, pathname, router, searchParams]);
   return (
-    <DropdownMenu>
+    <DropdownMenu open={showNotifs} onOpenChange={setShowNotifs}>
       <DropdownMenuTrigger asChild>
         <Button
           disabled={noInvites}

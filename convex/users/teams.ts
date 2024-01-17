@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "../functions";
 import { getRole, viewerHasPermissionX } from "../permissions";
-import { QueryCtx } from "../types";
+import { Ent, QueryCtx } from "../types";
 import { slugify } from "../utils";
 
 export const defaultToAccess = query({
@@ -10,13 +10,15 @@ export const defaultToAccess = query({
     if (ctx.viewer === null) {
       return null;
     }
-    return (
-      await ctx.viewer
-        .edge("members")
-        .map((member) => member.edge("team").doc())
-    ).filter((team) => team.isPersonal)[0];
+    return await defaultToAccessTeamSlug(ctx.viewer);
   },
 });
+
+export async function defaultToAccessTeamSlug(viewer: Ent<"users">) {
+  return (
+    await viewer.edge("members").map((member) => member.edge("team").doc())
+  ).filter((team) => team.isPersonal)[0]!.slug;
+}
 
 export const list = query({
   args: {},

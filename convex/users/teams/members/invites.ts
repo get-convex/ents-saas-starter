@@ -128,7 +128,7 @@ async function sendInviteEmail({
     subject: `${inviterEmail} invited you to join them in My App`,
     html: `<div><strong>${inviterEmail}</strong> invited
       you to join <strong>${teamName}</strong> in My App.
-      Click <a href="${process.env.HOSTED_URL}?showNotifs=1">here to accept</a>
+      Click <a href="${process.env.HOSTED_URL}/t?showNotifs=1">here to accept</a>
       or log in to My App.`,
   });
 
