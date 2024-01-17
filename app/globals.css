@@ -76,3 +76,17 @@
     @apply bg-background text-foreground min-h-full;
   }
 }
+
+/* Hides Clerk's built-in delete account as
+we have our own UI for account deletion, see
+https://discord.com/channels/856971667393609759/1172525365697200158
+on Clerk's Discord */
+.cl-profileSectionTitle.cl-profileSectionTitle__danger,
+.cl-profileSectionContent.cl-profileSectionContent__danger {
+  display: none;
+}
+
+/* LastPass is really dumb and doesn't respect autocomplete attribute */
+.hide-lastpass-icon [data-lastpass-icon-root="true"] {
+  display: none;
+}

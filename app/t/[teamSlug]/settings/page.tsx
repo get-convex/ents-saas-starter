@@ -10,17 +10,26 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { api } from "@/convex/_generated/api";
+import { useUser } from "@clerk/nextjs";
 import { useMutation } from "convex/react";
+import { useRouter } from "next/navigation";
 
 export default function GeneralSettingsPage() {
+  const { user: clerkUser } = useUser();
+  const router = useRouter();
   const team = useCurrentTeam();
   const permissions = useViewerPermissions();
   const deleteTeam = useMutation(api.users.teams.deleteTeam);
   if (team == null || permissions == null) {
     return null;
   }
-  console.log(permissions);
-
+  const handleDelete = async () => {
+    await deleteTeam({ teamId: team._id });
+    if (team.isPersonal) {
+      await clerkUser!.delete();
+      router.push("/");
+    }
+  };
   return (
     <>
       <h1 className="text-4xl font-extrabold mt-8">
@@ -37,7 +46,9 @@ export default function GeneralSettingsPage() {
               </CardDescription>
             </CardHeader>
             <CardFooter>
-              <Button variant="destructive">Delete Personal Account</Button>
+              <Button onClick={handleDelete as any} variant="destructive">
+                Delete Personal Account
+              </Button>
             </CardFooter>
           </>
         ) : (
@@ -51,9 +62,7 @@ export default function GeneralSettingsPage() {
             <CardFooter>
               <Button
                 disabled={!permissions.has("Delete Team")}
-                onClick={() => {
-                  void deleteTeam({ teamId: team._id });
-                }}
+                onClick={handleDelete as any}
                 variant="destructive"
               >
                 Delete Team

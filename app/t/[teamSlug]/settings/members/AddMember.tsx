@@ -56,6 +56,7 @@ export function AddMember() {
       <CardContent>
         <Form {...form}>
           <form
+            autoComplete="off"
             onSubmit={
               form.handleSubmit(async ({ email, role }) => {
                 await sendInvite({ email, roleId: role, teamId: team._id });
@@ -63,7 +64,7 @@ export function AddMember() {
                 toast({ title: "Member invite created." });
               }) as any
             }
-            className="flex flex-col sm:flex-row gap-6 sm:items-end"
+            className="flex flex-col sm:flex-row gap-6 sm:items-end hide-lastpass-icon"
           >
             <FormField
               control={form.control}
@@ -73,6 +74,7 @@ export function AddMember() {
                   <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input
+                      disabled={!hasManagePermission}
                       placeholder="jane@doe.com"
                       autoComplete="new-password"
                       {...field}
@@ -89,7 +91,11 @@ export function AddMember() {
                 <FormItem>
                   <FormLabel>Role</FormLabel>
                   <FormControl>
-                    <SelectRole value={field.value} onChange={field.onChange} />
+                    <SelectRole
+                      disabled={!hasManagePermission}
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

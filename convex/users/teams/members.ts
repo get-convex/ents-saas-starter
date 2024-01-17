@@ -1,6 +1,7 @@
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "../../functions";
 import { getRole, viewerHasPermissionX } from "../../permissions";
+import { Ent, QueryCtx } from "../../types";
 
 export const viewerPermissions = query({
   args: {
@@ -51,30 +52,45 @@ export const list = query({
   },
 });
 
+export const update = mutation({
+  args: {
+    memberId: v.id("members"),
+    roleId: v.id("roles"),
+  },
+  async handler(ctx, { memberId, roleId }) {
+    const member = await ctx.table("members").getX(memberId);
+    await viewerHasPermissionX(ctx, member.teamId, "Manage Members");
+    await checkAnotherAdminExists(ctx, member);
+    await member.patch({ roleId });
+  },
+});
+
 export const deleteMember = mutation({
   args: {
     memberId: v.id("members"),
   },
   async handler(ctx, { memberId }) {
     const member = await ctx.table("members").getX(memberId);
-    const adminRole = await getRole(ctx, "Admin");
-    const otherAdmin = await ctx
-      .table("teams")
-      .getX(member.teamId)
-      .edge("members")
-      .filter((q) =>
-        q.and(
-          q.eq(q.field("roleId"), adminRole._id),
-          q.neq(q.field("_id"), memberId)
-        )
-      )
-      .first();
-    if (otherAdmin === null) {
-      throw new ConvexError(
-        "There must be at least one admin left on the team"
-      );
-    }
     await viewerHasPermissionX(ctx, member.teamId, "Manage Members");
+    await checkAnotherAdminExists(ctx, member);
     await ctx.table("members").getX(memberId).delete();
   },
 });
+
+async function checkAnotherAdminExists(ctx: QueryCtx, member: Ent<"members">) {
+  const adminRole = await getRole(ctx, "Admin");
+  const otherAdmin = await ctx
+    .table("teams")
+    .getX(member.teamId)
+    .edge("members")
+    .filter((q) =>
+      q.and(
+        q.eq(q.field("roleId"), adminRole._id),
+        q.neq(q.field("_id"), member._id)
+      )
+    )
+    .first();
+  if (otherAdmin === null) {
+    throw new ConvexError("There must be at least one admin left on the team");
+  }
+}

@@ -8,36 +8,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/convex/_generated/api";
 import { BellIcon } from "@radix-ui/react-icons";
 import { useMutation, useQuery } from "convex/react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Fragment } from "react";
 
 export function Notifications() {
   const router = useRouter();
   const invites = useQuery(api.invites.list);
   const acceptInvite = useMutation(api.invites.accept);
   const noInvites = (invites ?? []).length === 0;
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const [showNotifs, setShowNotifs] = useState(false);
-  const forceShowNotifs = searchParams.get("showNotifs") !== null;
-  useEffect(() => {
-    if (forceShowNotifs) {
-      setShowNotifs(true);
-      const newSearchParams = new URLSearchParams(searchParams);
-      newSearchParams.delete("showNotifs");
-      const newSearchParamsString = newSearchParams.toString();
-      router.replace(
-        `${pathname}${
-          newSearchParamsString.length > 0 ? `?${newSearchParamsString}` : ""
-        }`
-      );
-    }
-  }, [forceShowNotifs, pathname, router, searchParams]);
   return (
-    <DropdownMenu open={showNotifs} onOpenChange={setShowNotifs}>
+    <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           disabled={noInvites}
@@ -53,9 +37,8 @@ export function Notifications() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-80">
         {invites?.map((invite, i) => (
-          <>
+          <Fragment key={invite._id}>
             <DropdownMenuItem
-              key={invite._id}
               onSelect={
                 (async () => {
                   const teamSlug = await acceptInvite({ inviteId: invite._id });
@@ -71,8 +54,8 @@ export function Notifications() {
               </div>
             </DropdownMenuItem>
             {i < invites.length - 1 ? <DropdownMenuSeparator /> : null}
-          </>
-        ))}
+          </Fragment>
+        )) ?? <Skeleton className="w-full h-10" />}
       </DropdownMenuContent>
     </DropdownMenu>
   );

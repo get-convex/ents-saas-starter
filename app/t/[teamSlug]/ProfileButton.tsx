@@ -11,7 +11,9 @@ export function ProfileButton() {
         <Skeleton className="w-8 h-8 rounded-full" />
       </AuthLoading>
       <Authenticated>
-        <UserButton afterSignOutUrl="/" />
+        <div className="w-8 h-8">
+          <UserButton afterSignOutUrl="/" />
+        </div>
       </Authenticated>
     </div>
   );

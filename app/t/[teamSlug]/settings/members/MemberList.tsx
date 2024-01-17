@@ -69,6 +69,7 @@ function MembersTable({
   members: NonNullable<FunctionReturnType<typeof api.users.teams.members.list>>;
   viewerPermissions: NonNullable<ReturnType<typeof useViewerPermissions>>;
 }) {
+  const updateMember = useMutation(api.users.teams.members.update);
   const deleteMember = useMutation(api.users.teams.members.deleteMember);
   const hasManagePermission = viewerPermissions.has("Manage Members");
   return (
@@ -87,6 +88,19 @@ function MembersTable({
                 <SelectRole
                   disabled={!hasManagePermission}
                   value={member.roleId}
+                  onChange={(roleId) => {
+                    updateMember({ memberId: member._id, roleId }).catch(
+                      (error) => {
+                        toast({
+                          title:
+                            error instanceof ConvexError
+                              ? error.data
+                              : "Could not update role",
+                          variant: "destructive",
+                        });
+                      }
+                    );
+                  }}
                 />
               </div>
             </TableCell>
@@ -109,7 +123,7 @@ function MembersTable({
                           title:
                             error instanceof ConvexError
                               ? error.data
-                              : "Could not delete member.",
+                              : "Could not delete member",
                           variant: "destructive",
                         });
                       });

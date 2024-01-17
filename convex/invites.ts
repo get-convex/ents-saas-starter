@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./functions";
+import { Ent, QueryCtx } from "./types";
 
 export const list = query({
   args: {},
@@ -19,15 +20,33 @@ export const list = query({
   },
 });
 
+export const get = query({
+  args: {
+    inviteId: v.id("invites"),
+  },
+  async handler(ctx, { inviteId }) {
+    if (ctx.viewer === null) {
+      return null;
+    }
+    const invite = await ctx.table("invites").getX(inviteId);
+    checkViewerWasInvited(ctx, invite);
+    return {
+      _id: invite._id,
+      email: invite.email,
+      inviterEmail: invite.inviterEmail,
+      team: (await invite.edge("team")).name,
+      role: (await invite.edge("role")).name,
+    };
+  },
+});
+
 export const accept = mutation({
   args: {
     inviteId: v.id("invites"),
   },
   async handler(ctx, { inviteId }) {
     const invite = await ctx.table("invites").getX(inviteId);
-    if (invite.email !== ctx.viewerX().email) {
-      throw new Error("Invite email does not match viewer email");
-    }
+    checkViewerWasInvited(ctx, invite);
     await ctx.table("members").insert({
       teamId: invite.teamId,
       userId: ctx.viewerX()._id,
@@ -37,3 +56,24 @@ export const accept = mutation({
     return (await invite.edge("team")).slug;
   },
 });
+
+export const deleteInvite = mutation({
+  args: {
+    inviteId: v.id("invites"),
+  },
+  async handler(ctx, { inviteId }) {
+    const invite = await ctx.table("invites").getX(inviteId);
+    checkViewerWasInvited(ctx, invite);
+    await ctx.table("invites").getX(inviteId).delete();
+  },
+});
+
+// NOTE: If you want your users to accept invites after signing up
+// with a different email, add a cryptographically secure token to
+// the invite ent, and use it in place of the ID as INVITE_PARAM.
+// Don't use the invite ID, as it shown to all team members.
+function checkViewerWasInvited(ctx: QueryCtx, invite: Ent<"invites">) {
+  if (invite.email !== ctx.viewerX().email) {
+    throw new Error("Invite email does not match viewer email");
+  }
+}

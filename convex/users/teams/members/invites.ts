@@ -1,6 +1,6 @@
 import { ConvexError, v } from "convex/values";
 import { Resend } from "resend";
-import { internal } from "../../../_generated/api";
+import { api, internal } from "../../../_generated/api";
 import { action } from "../../../_generated/server";
 import {
   internalMutation,
@@ -9,6 +9,8 @@ import {
   query,
 } from "../../../functions";
 import { viewerHasPermissionX } from "../../../permissions";
+import { Id } from "../../../_generated/dataModel";
+import { INVITE_PARAM } from "../../../../app/constants";
 
 export const list = query({
   args: {
@@ -62,13 +64,18 @@ export const send = action({
       internal.users.teams.members.invites.prepare,
       { teamId }
     );
-    await sendInviteEmail({ email, inviterEmail, teamName });
-    await ctx.runMutation(internal.users.teams.members.invites.create, {
-      teamId,
-      email,
-      roleId,
-      inviterEmail,
-    });
+    const inviteId = await ctx.runMutation(
+      internal.users.teams.members.invites.create,
+      { teamId, email, roleId, inviterEmail }
+    );
+    try {
+      await sendInviteEmail({ email, inviteId, inviterEmail, teamName });
+    } catch (error) {
+      await ctx.runMutation(api.users.teams.members.invites.deleteInvite, {
+        inviteId,
+      });
+      throw error;
+    }
   },
 });
 
@@ -93,7 +100,7 @@ export const create = internalMutation({
     inviterEmail: v.string(),
   },
   async handler(ctx, { teamId, email, roleId, inviterEmail }) {
-    await ctx.table("invites").insert({
+    return await ctx.table("invites").insert({
       teamId,
       email,
       roleId,
@@ -104,10 +111,12 @@ export const create = internalMutation({
 
 async function sendInviteEmail({
   email,
+  inviteId,
   inviterEmail,
   teamName,
 }: {
   email: string;
+  inviteId: Id<"invites">;
   inviterEmail: string;
   teamName: string;
 }) {
@@ -128,7 +137,7 @@ async function sendInviteEmail({
     subject: `${inviterEmail} invited you to join them in My App`,
     html: `<div><strong>${inviterEmail}</strong> invited
       you to join <strong>${teamName}</strong> in My App.
-      Click <a href="${process.env.HOSTED_URL}/t?showNotifs=1">here to accept</a>
+      Click <a href="${process.env.HOSTED_URL}/t?${INVITE_PARAM}=${inviteId}">here to accept</a>
       or log in to My App.`,
   });
 
