@@ -1,21 +1,33 @@
-# Convex + TypeScript + Next.js + Clerk + Tailwind + shadcn/ui
+# SaaS Starter: Convex + TypeScript + Next.js + Clerk + Tailwind + shadcn/ui
 
-This template provides a minimal setup to get Convex working with [Next.js](https://nextjs.org/). It uses [Clerk](https://clerk.dev/) for user authentication.
+Build your SaaS website in no time! Included:
 
-Start by editing `convex/myFunctions.ts` and interact with your Next.js app.
+- Realtime database for implementing your product with
+  [Convex](https://convex.dev)
+  - Team/organization management
+- Member invite emails using [Resend](https://resend.com)
+- User sign-in and sign-up with [Clerk](https://clerk.com)
+- Website router with [Next.js](https://nextjs.org/)
+- Slick UX with [shadcn/ui](https://ui.shadcn.com/)
 
 See Convex docs at https://docs.convex.dev/home
 
 ## Setting up
 
 ```
-npm create convex@latest -t nextjs-clerk-shadcn
+npm create convex@latest -t xixixao/saas-starter
 ```
 
 Then:
 
-1. Follow steps 1 to 3 in the [Clerk onboarding guide](https://docs.convex.dev/auth/clerk#get-started)
-2. Paste the Issuer URL as `CLERK_JWT_ISSUER_DOMAIN` to your dev deployment environment variable settings on the Convex dashboard (see [docs](https://docs.convex.dev/auth/clerk#configuring-dev-and-prod-instances))
-3. Paste your publishable key as `VITE_CLERK_PUBLISHABLE_KEY="<your publishable key>"` to the `.env.local` file in this directory.
+1. Run `npm run dev`
+   - It will ask you to set up `CLERK_JWT_ISSUER_DOMAIN`, Follow steps 1 to 3 in
+     the
+     [Convex Clerk onboarding guide](https://docs.convex.dev/auth/clerk#get-started)
+2. Follow step 3 from the
+   [Clerk Next.js quickstart](https://clerk.com/docs/quickstarts/nextjs#set-environment-keys),
+   setting up both `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` in
+   your `.env.local` file
 
-If you want to sync Clerk user data via webhooks, check out this [example repo](https://github.com/thomasballinger/convex-clerk-users-table/).
+If you want to sync Clerk user data via webhooks, check out this
+[example repo](https://github.com/thomasballinger/convex-clerk-users-table/).
