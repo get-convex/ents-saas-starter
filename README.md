@@ -10,7 +10,8 @@ Build your SaaS website in no time! Included:
 - Website router with [Next.js](https://nextjs.org/)
 - Slick UX with [shadcn/ui](https://ui.shadcn.com/)
 
-See Convex docs at https://docs.convex.dev/home
+Check out [Convex docs](https://docs.convex.dev/home), and
+[Convex Ents docs](https://labs.convex.dev/convex-ents)
 
 ## Setting up
 
