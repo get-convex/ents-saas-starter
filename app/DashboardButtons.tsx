@@ -27,7 +27,7 @@ export function DashboardButtons() {
           <SignInButton mode="modal" redirectUrl="/t">
             <Button variant="ghost">Sign in</Button>
           </SignInButton>
-          <SignUpButton mode="modal">
+          <SignUpButton mode="modal" redirectUrl="/t">
             <Button>Sign up</Button>
           </SignUpButton>
         </div>
