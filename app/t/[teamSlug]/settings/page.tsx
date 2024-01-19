@@ -1,6 +1,7 @@
 "use client";
 
 import { useCurrentTeam, useViewerPermissions } from "@/app/t/[teamSlug]/hooks";
+import { DeleteTeamDialog } from "@/app/t/[teamSlug]/settings/DeleteTeamDialog";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,26 +10,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { api } from "@/convex/_generated/api";
-import { useUser } from "@clerk/nextjs";
-import { useMutation } from "convex/react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function GeneralSettingsPage() {
-  const { user: clerkUser } = useUser();
-  const router = useRouter();
   const team = useCurrentTeam();
   const permissions = useViewerPermissions();
-  const deleteTeam = useMutation(api.users.teams.deleteTeam);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
   if (team == null || permissions == null) {
     return null;
   }
-  const handleDelete = async () => {
-    await deleteTeam({ teamId: team._id });
-    if (team.isPersonal) {
-      await clerkUser!.delete();
-      router.push("/");
-    }
+
+  const openDeleteTeamDialog = () => {
+    setShowDeleteDialog(true);
   };
   return (
     <>
@@ -46,7 +40,7 @@ export default function GeneralSettingsPage() {
               </CardDescription>
             </CardHeader>
             <CardFooter>
-              <Button onClick={handleDelete as any} variant="destructive">
+              <Button onClick={openDeleteTeamDialog} variant="destructive">
                 Delete Personal Account
               </Button>
             </CardFooter>
@@ -62,7 +56,7 @@ export default function GeneralSettingsPage() {
             <CardFooter>
               <Button
                 disabled={!permissions.has("Delete Team")}
-                onClick={handleDelete as any}
+                onClick={openDeleteTeamDialog}
                 variant="destructive"
               >
                 Delete Team
@@ -71,6 +65,7 @@ export default function GeneralSettingsPage() {
           </>
         )}
       </Card>
+      <DeleteTeamDialog open={showDeleteDialog} setOpen={setShowDeleteDialog} />
     </>
   );
 }
