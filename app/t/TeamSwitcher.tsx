@@ -89,16 +89,9 @@ export function TeamSwitcher() {
               {groups.map((group) => (
                 <CommandGroup key={group.label} heading={group.label}>
                   {group.teams.map((team) => (
-                    <CommandItem
-                      key={team.name}
-                      onSelect={() => {
-                        router.push(`/${team.slug}`);
-                        setOpen(false);
-                      }}
-                      className="text-sm"
-                    >
+                    <CommandItem key={team.name} className="text-sm p-0">
                       <Link
-                        className="flex justify-between items-center"
+                        className="flex justify-between items-center px-2 py-1.5"
                         href={{
                           pathname: `/t/${team.slug}/${pathname
                             .split("/")
