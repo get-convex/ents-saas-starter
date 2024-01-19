@@ -26,9 +26,16 @@ export const list = query({
     if (ctx.viewer === null) {
       return null;
     }
-    return await ctx.viewer
-      .edge("members")
-      .map((member) => member.edge("team").doc());
+    return await ctx.viewer.edge("members").map(async (member) => {
+      const team = await member.edge("team");
+      return {
+        _id: team._id,
+        name: team.name,
+        slug: team.slug,
+        isPersonal: team.isPersonal,
+        pictureUrl: team.isPersonal ? ctx.viewer!.pictureUrl : null,
+      };
+    });
   },
 });
 
