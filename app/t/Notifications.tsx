@@ -1,5 +1,6 @@
 "use client";
 
+import { handleFailure } from "@/app/handleFailure";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -39,12 +40,10 @@ export function Notifications() {
         {invites?.map((invite, i) => (
           <Fragment key={invite._id}>
             <DropdownMenuItem
-              onSelect={
-                (async () => {
-                  const teamSlug = await acceptInvite({ inviteId: invite._id });
-                  router.push(`/t/${teamSlug}`);
-                }) as any
-              }
+              onSelect={handleFailure(async () => {
+                const teamSlug = await acceptInvite({ inviteId: invite._id });
+                router.push(`/t/${teamSlug}`);
+              })}
             >
               <div>
                 <span className="font-medium">{invite.inviterEmail}</span> has

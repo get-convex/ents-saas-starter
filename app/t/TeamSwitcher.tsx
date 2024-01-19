@@ -30,7 +30,7 @@ import { api } from "@/convex/_generated/api";
 import { cn } from "@/lib/utils";
 import { useQuery } from "convex/react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 export function TeamSwitcher() {
@@ -39,8 +39,6 @@ export function TeamSwitcher() {
   const selectedTeam = useCurrentTeam();
 
   const [open, setOpen] = useState(false);
-
-  const router = useRouter();
 
   const [showNewTeamDialog, handleShowNewTeamDialog, createTeamDialogContent] =
     useCreateTeamDialog();

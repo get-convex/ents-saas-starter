@@ -1,5 +1,6 @@
 "use client";
 
+import { handleFailure } from "@/app/handleFailure";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
@@ -57,13 +58,13 @@ export function useCreateTeamDialog() {
       <Form {...form}>
         <form
           className="flex flex-col gap-4"
-          onSubmit={
+          onSubmit={handleFailure(
             form.handleSubmit(async ({ name }) => {
               const teamSlug = await createTeam({ name });
               handleShowNewTeamDialog(false);
               router.push(`/t/${teamSlug}`);
-            }) as any
-          }
+            })
+          )}
         >
           <DialogHeader>
             <DialogTitle>Create team</DialogTitle>

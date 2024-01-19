@@ -1,6 +1,7 @@
 "use client";
 
 import { INVITE_PARAM } from "@/app/constants";
+import { handleFailure } from "@/app/handleFailure";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -64,25 +65,21 @@ export function AcceptInviteDialog() {
         </DialogHeader>
         <DialogFooter>
           <Button
-            onClick={
-              (async () => {
-                const teamSlug = await deleteInvite({ inviteId: invite._id });
-                setInviteId(null);
-                router.push(`/t/${teamSlug}`);
-              }) as any
-            }
+            onClick={handleFailure(async () => {
+              const teamSlug = await deleteInvite({ inviteId: invite._id });
+              setInviteId(null);
+              router.push(`/t/${teamSlug}`);
+            })}
             variant="destructive"
           >
             Decline
           </Button>
           <Button
-            onClick={
-              (async () => {
-                const teamSlug = await acceptInvite({ inviteId: invite._id });
-                setInviteId(null);
-                router.push(`/t/${teamSlug}`);
-              }) as any
-            }
+            onClick={handleFailure(async () => {
+              const teamSlug = await acceptInvite({ inviteId: invite._id });
+              setInviteId(null);
+              router.push(`/t/${teamSlug}`);
+            })}
           >
             Confirm
           </Button>

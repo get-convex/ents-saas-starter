@@ -1,3 +1,4 @@
+import { handleFailure } from "@/app/handleFailure";
 import { useCurrentTeam, useViewerPermissions } from "@/app/t/[teamSlug]/hooks";
 import { SelectRole } from "@/app/t/[teamSlug]/settings/members/SelectRole";
 import { Button } from "@/components/ui/button";
@@ -57,13 +58,13 @@ export function AddMember() {
         <Form {...form}>
           <form
             autoComplete="off"
-            onSubmit={
+            onSubmit={handleFailure(
               form.handleSubmit(async ({ email, role }) => {
                 await sendInvite({ email, roleId: role, teamId: team._id });
                 form.reset();
                 toast({ title: "Member invite created." });
-              }) as any
-            }
+              })
+            )}
             className="flex flex-col sm:flex-row gap-6 sm:items-end hide-lastpass-icon"
           >
             <FormField
