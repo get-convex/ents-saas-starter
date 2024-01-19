@@ -1,14 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { MessageBoard } from "@/app/t/[teamSlug]/MessageBoard";
+import { useCurrentTeam } from "@/app/t/[teamSlug]/hooks";
 
 export default function Home() {
-  const [count, setCount] = useState(0);
+  const team = useCurrentTeam();
+  if (team == null) {
+    return null;
+  }
   return (
     <main className="container">
-      <h1 className="text-4xl font-extrabold my-8">Hello there!</h1>
-      Count: {count}
-      <button onClick={() => setCount((count) => count + 1)}>Click me</button>
+      <h1 className="text-4xl font-extrabold my-8">
+        {team.name}
+        {"'"}s Projects
+      </h1>
+      <p>This is where your product actually lives.</p>
+      <p>As an example, here{"'"}s a message board for the team:</p>
+      <MessageBoard />
     </main>
   );
 }

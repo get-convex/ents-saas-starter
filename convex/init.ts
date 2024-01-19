@@ -14,6 +14,7 @@ export const init = internalMutation({
         { name: "Delete Team" },
         { name: "Manage Members" },
         { name: "Read Members" },
+        { name: "Contribute" },
       ]);
 
     await ctx.table("roles").insert({
@@ -24,12 +25,16 @@ export const init = internalMutation({
         await getPermission(ctx, "Delete Team"),
         await getPermission(ctx, "Manage Members"),
         await getPermission(ctx, "Read Members"),
+        await getPermission(ctx, "Contribute"),
       ],
     });
     await ctx.table("roles").insert({
       name: "Member",
       isDefault: true,
-      permissions: [await getPermission(ctx, "Read Members")],
+      permissions: [
+        await getPermission(ctx, "Read Members"),
+        await getPermission(ctx, "Contribute"),
+      ],
     });
   },
 });

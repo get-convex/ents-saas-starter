@@ -10,13 +10,15 @@ const schema = defineEntSchema(
     })
       .field("slug", v.string(), { unique: true })
       .edges("members", { ref: true })
-      .edges("invites", { ref: true }),
+      .edges("invites", { ref: true })
+      .edges("messages", { ref: true }),
 
     members: defineEnt({})
       .edge("team")
       .edge("user")
       .edge("role")
-      .index("teamUser", ["teamId", "userId"]),
+      .index("teamUser", ["teamId", "userId"])
+      .edges("messages", { ref: true }),
 
     invites: defineEnt({
       inviterEmail: v.string(),
@@ -29,7 +31,9 @@ const schema = defineEntSchema(
       isDefault: v.boolean(),
     })
       .field("name", vRole, { unique: true })
-      .edges("permissions"),
+      .edges("permissions")
+      .edges("members", { ref: true })
+      .edges("invites", { ref: true }),
 
     permissions: defineEnt({})
       .field("name", vPermission, { unique: true })
@@ -44,6 +48,12 @@ const schema = defineEntSchema(
     })
       .field("tokenIdentifier", v.string(), { unique: true })
       .edges("members", { ref: true }),
+
+    messages: defineEnt({
+      text: v.string(),
+    })
+      .edge("team")
+      .edge("member"),
   },
   { schemaValidation: false }
 );

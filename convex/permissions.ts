@@ -6,7 +6,8 @@ export const vPermission = v.union(
   v.literal("Manage Team"),
   v.literal("Delete Team"),
   v.literal("Read Members"),
-  v.literal("Manage Members")
+  v.literal("Manage Members"),
+  v.literal("Contribute")
 );
 export type Permission = Infer<typeof vPermission>;
 
@@ -26,16 +27,18 @@ export async function viewerHasPermissionX(
   teamId: Id<"teams">,
   name: Permission
 ) {
+  const member = await ctx
+    .table("members", "teamUser", (q) =>
+      q.eq("teamId", teamId).eq("userId", ctx.viewerX()._id)
+    )
+    .uniqueX();
   if (
-    !(await ctx
-      .table("members", "teamUser", (q) =>
-        q.eq("teamId", teamId).eq("userId", ctx.viewerX()._id)
-      )
-      .uniqueX()
+    !(await member
       .edge("role")
       .edge("permissions")
       .has(await getPermission(ctx, name)))
   ) {
-    throw new Error("Only admins can delete teams");
+    throw new Error(`Viewer does not have the permission "${name}"`);
   }
+  return member;
 }
