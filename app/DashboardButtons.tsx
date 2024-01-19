@@ -1,45 +1,44 @@
 "use client";
 
-import { ConvexClientProvider } from "@/app/ConvexClientProvider";
+import { ErrorBoundary } from "@/app/ErrorBoundary";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { api } from "@/convex/_generated/api";
 import { SignInButton, SignUpButton } from "@clerk/clerk-react";
 import {
-  AuthLoading,
-  Authenticated,
-  Unauthenticated,
-  useQuery,
-} from "convex/react";
+  ClerkLoading,
+  ClerkProvider,
+  SignedIn,
+  SignedOut,
+} from "@clerk/nextjs";
 import Link from "next/link";
 
 export function DashboardButtons() {
   return (
-    <ConvexClientProvider>
-      <AuthLoading>
-        <Skeleton className="w-40 h-9" />
-      </AuthLoading>
-      <Authenticated>
-        <OpenDashboardLinkButton />
-      </Authenticated>
-      <Unauthenticated>
-        <div className="flex gap-4">
-          <SignInButton mode="modal" redirectUrl="/t">
-            <Button variant="ghost">Sign in</Button>
-          </SignInButton>
-          <SignUpButton mode="modal" redirectUrl="/t">
-            <Button>Sign up</Button>
-          </SignUpButton>
-        </div>
-      </Unauthenticated>
-    </ConvexClientProvider>
+    <ErrorBoundary>
+      <ClerkProvider>
+        <ClerkLoading>
+          <div className="w-40 h-9" />
+        </ClerkLoading>
+        <SignedIn>
+          <OpenDashboardLinkButton />
+        </SignedIn>
+        <SignedOut>
+          <div className="flex gap-4 animate-[fade-in_0.2s]">
+            <SignInButton mode="modal" redirectUrl="/t">
+              <Button variant="ghost">Sign in</Button>
+            </SignInButton>
+            <SignUpButton mode="modal" redirectUrl="/t">
+              <Button>Sign up</Button>
+            </SignUpButton>
+          </div>
+        </SignedOut>
+      </ClerkProvider>
+    </ErrorBoundary>
   );
 }
 
 function OpenDashboardLinkButton() {
-  const defaultTeamSlug = useQuery(api.users.teams.defaultToAccess);
   return (
-    <Link href={`/t/${defaultTeamSlug}`}>
+    <Link href="/t" className="animate-[fade-in_0.2s]">
       <Button>Dashboard</Button>
     </Link>
   );
