@@ -6,6 +6,7 @@ import { ProfileButton } from "@/app/t/[teamSlug]/ProfileButton";
 import { StickyHeader } from "@/components/layout/sticky-header";
 import { TeamSwitcher } from "@/app/t/TeamSwitcher";
 import { Toaster } from "@/components/ui/toaster";
+import { Suspense } from "react";
 
 export default function DashboardLayout({
   children,
@@ -13,20 +14,22 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ConvexClientProvider>
-      <StickyHeader className="px-4 py-2 flex flex-col gap-2">
-        <div className="flex justify-between items-center">
-          <TeamSwitcher />
-          <div className="flex items-center gap-4">
-            <Notifications />
-            <ProfileButton />
+    <Suspense>
+      <ConvexClientProvider>
+        <StickyHeader className="px-4 py-2 flex flex-col gap-2">
+          <div className="flex justify-between items-center">
+            <TeamSwitcher />
+            <div className="flex items-center gap-4">
+              <Notifications />
+              <ProfileButton />
+            </div>
           </div>
-        </div>
-        <TeamMenu />
-      </StickyHeader>
-      {children}
-      <AcceptInviteDialog />
-      <Toaster />
-    </ConvexClientProvider>
+          <TeamMenu />
+        </StickyHeader>
+        {children}
+        <AcceptInviteDialog />
+        <Toaster />
+      </ConvexClientProvider>
+    </Suspense>
   );
 }
