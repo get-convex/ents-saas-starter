@@ -20,20 +20,33 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
+import { Permission } from "@/convex/permissions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { zid } from "convex-helpers/server/zod";
 import { useAction, useQuery } from "convex/react";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 export function AddMember() {
-  const team = useCurrentTeam();
   const permissions = useViewerPermissions();
   const availableRoles = useQuery(api.users.teams.roles.list);
-  const sendInvite = useAction(api.users.teams.members.invites.send);
-  const defaultRole = availableRoles?.filter((role) => role.isDefault)[0].id;
+  const defaultRole = availableRoles?.filter((role) => role.isDefault)[0]._id;
+  if (permissions == null || availableRoles == null || defaultRole == null) {
+    return null;
+  }
+  return <AddMemberForm defaultRole={defaultRole} permissions={permissions} />;
+}
+
+function AddMemberForm({
+  defaultRole,
+  permissions,
+}: {
+  defaultRole: Id<"roles">;
+  permissions: Set<Permission>;
+}) {
+  const team = useCurrentTeam();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -41,10 +54,8 @@ export function AddMember() {
       role: defaultRole,
     },
   });
-  useEffect(() => {
-    form.reset({ email: "", role: defaultRole });
-  }, [form, defaultRole]);
-  if (team == null || permissions == null || availableRoles == null) {
+  const sendInvite = useAction(api.users.teams.members.invites.send);
+  if (team == null) {
     return null;
   }
   const hasManagePermission = permissions.has("Manage Members");

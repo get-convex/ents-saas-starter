@@ -4,7 +4,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/convex/_generated/api";
+import { cn } from "@/lib/utils";
 import { useMutation, usePaginatedQuery } from "convex/react";
+import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
 
 export function MessageBoard() {
@@ -58,7 +60,25 @@ export function MessageBoard() {
           {messages.map((message) => (
             <div key={message._id} className="text-sm">
               <div>
-                <span className="font-semibold">{message.author}:</span>{" "}
+                {/*eslint-disable-next-line @next/next/no-img-element*/}
+                <img
+                  src={message.authorPictureUrl}
+                  alt="avatar"
+                  className={cn(
+                    "rounded-full inline-block mr-2",
+                    message.isAuthorDeleted && "grayscale"
+                  )}
+                  width={20}
+                  height={20}
+                />
+                <span
+                  className={cn(
+                    "font-semibold",
+                    message.isAuthorDeleted && "text-muted-foreground"
+                  )}
+                >
+                  {message.author}:
+                </span>{" "}
                 {message.text}
               </div>
               <Separator className="my-2" />

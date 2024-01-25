@@ -29,7 +29,7 @@ export function SelectRole({
       </SelectTrigger>
       <SelectContent>
         {availableRoles.map((role) => (
-          <SelectItem key={role.id} value={role.id}>
+          <SelectItem key={role._id} value={role._id}>
             {role.name}
           </SelectItem>
         ))}

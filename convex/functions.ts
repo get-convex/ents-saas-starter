@@ -1,4 +1,4 @@
-import { entsTableFactory } from "convex-ents";
+import { entsTableFactory, scheduledDeleteFactory } from "convex-ents";
 import {
   customCtx,
   customMutation,
@@ -46,7 +46,7 @@ async function queryCtx(baseCtx: BaseQueryCtx) {
   const ctx = {
     ...baseCtx,
     db: undefined,
-    table: entsTableFactory(baseCtx.db, entDefinitions),
+    table: entsTableFactory(baseCtx, entDefinitions),
   };
   const identity = await ctx.auth.getUserIdentity();
   const viewer =
@@ -68,7 +68,7 @@ async function mutationCtx(baseCtx: BaseMutationCtx) {
   const ctx = {
     ...baseCtx,
     db: undefined,
-    table: entsTableFactory(baseCtx.db, entDefinitions),
+    table: entsTableFactory(baseCtx, entDefinitions),
   };
   const identity = await ctx.auth.getUserIdentity();
   const viewer =
@@ -85,3 +85,5 @@ async function mutationCtx(baseCtx: BaseMutationCtx) {
   };
   return { ...ctx, viewer, viewerX };
 }
+
+export const scheduledDelete = scheduledDeleteFactory(entDefinitions);

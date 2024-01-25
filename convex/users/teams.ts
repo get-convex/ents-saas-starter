@@ -4,20 +4,11 @@ import { getRole, viewerHasPermissionX } from "../permissions";
 import { Ent, QueryCtx } from "../types";
 import { slugify } from "../utils";
 
-export const defaultToAccess = query({
-  args: {},
-  async handler(ctx) {
-    if (ctx.viewer === null) {
-      return null;
-    }
-    return await defaultToAccessTeamSlug(ctx.viewer);
-  },
-});
-
 export async function defaultToAccessTeamSlug(viewer: Ent<"users">) {
   return (
     await viewer.edge("members").map((member) => member.edge("team").doc())
-  ).filter((team) => team.isPersonal)[0]!.slug;
+  ).filter((team) => team.deletionTime === undefined && team.isPersonal)[0]!
+    .slug;
 }
 
 export const list = query({
@@ -26,16 +17,22 @@ export const list = query({
     if (ctx.viewer === null) {
       return null;
     }
-    return await ctx.viewer.edge("members").map(async (member) => {
-      const team = await member.edge("team");
-      return {
-        _id: team._id,
-        name: team.name,
-        slug: team.slug,
-        isPersonal: team.isPersonal,
-        pictureUrl: team.isPersonal ? ctx.viewer!.pictureUrl : null,
-      };
-    });
+    return await ctx.viewer
+      .edge("members")
+      .map(async (member) => {
+        const team = await member.edge("team");
+        return {
+          _id: team._id,
+          name: team.name,
+          slug: team.slug,
+          isPersonal: team.isPersonal,
+          pictureUrl: team.isPersonal ? ctx.viewer!.pictureUrl : null,
+          isDeleted:
+            member.deletionTime !== undefined ||
+            team.deletionTime !== undefined,
+        };
+      })
+      .filter((member) => !member.isDeleted);
   },
 });
 

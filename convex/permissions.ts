@@ -1,5 +1,5 @@
 import { Infer, v } from "convex/values";
-import { QueryCtx } from "./types";
+import { MutationCtx, QueryCtx } from "./types";
 import { Id } from "./_generated/dataModel";
 
 export const vPermission = v.union(
@@ -22,7 +22,7 @@ export async function getRole(ctx: QueryCtx, name: Role) {
   return await ctx.table("roles").getX("name", name);
 }
 
-export async function viewerHasPermissionX(
+export async function viewerWithPermission(
   ctx: QueryCtx,
   teamId: Id<"teams">,
   name: Permission
@@ -31,14 +31,46 @@ export async function viewerHasPermissionX(
     .table("members", "teamUser", (q) =>
       q.eq("teamId", teamId).eq("userId", ctx.viewerX()._id)
     )
-    .uniqueX();
+    .unique();
   if (
+    member === null ||
+    member.deletionTime !== undefined ||
     !(await member
       .edge("role")
       .edge("permissions")
       .has(await getPermission(ctx, name)))
   ) {
+    return null;
+  }
+  return member;
+}
+
+export async function viewerHasPermission(
+  ctx: QueryCtx,
+  teamId: Id<"teams">,
+  name: Permission
+) {
+  const member = await viewerWithPermission(ctx, teamId, name);
+  return member !== null;
+}
+
+export async function viewerWithPermissionX(
+  ctx: MutationCtx,
+  teamId: Id<"teams">,
+  name: Permission
+) {
+  const member = await viewerWithPermission(ctx, teamId, name);
+  if (member === null) {
     throw new Error(`Viewer does not have the permission "${name}"`);
   }
   return member;
+}
+
+export async function viewerHasPermissionX(
+  ctx: MutationCtx,
+  teamId: Id<"teams">,
+  name: Permission
+) {
+  await viewerWithPermissionX(ctx, teamId, name);
+  return true;
 }

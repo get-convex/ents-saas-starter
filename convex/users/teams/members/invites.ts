@@ -1,26 +1,28 @@
 import { ConvexError, v } from "convex/values";
 import { Resend } from "resend";
-import { api, internal } from "../../../_generated/api";
-import { action } from "../../../_generated/server";
-import {
-  internalMutation,
-  internalQuery,
-  mutation,
-  query,
-} from "../../../functions";
-import { viewerHasPermissionX } from "../../../permissions";
-import { Id } from "../../../_generated/dataModel";
 import { INVITE_PARAM } from "../../../../app/constants";
+import { api, internal } from "../../../_generated/api";
+import { Id } from "../../../_generated/dataModel";
+import { action } from "../../../_generated/server";
+import { internalMutation, mutation, query } from "../../../functions";
+import {
+  viewerHasPermission,
+  viewerHasPermissionX,
+} from "../../../permissions";
 
 export const list = query({
   args: {
     teamId: v.optional(v.id("teams")),
   },
   async handler(ctx, { teamId }) {
-    if (teamId === undefined || ctx.viewer === null) {
+    if (
+      teamId === undefined ||
+      ctx.viewer === null ||
+      !(await viewerHasPermission(ctx, teamId, "Read Members"))
+    ) {
       return null;
     }
-    await viewerHasPermissionX(ctx, teamId, "Read Members");
+
     return await ctx
       .table("teams")
       .getX(teamId)
@@ -60,7 +62,7 @@ export const send = action({
     roleId: v.id("roles"),
   },
   async handler(ctx, { teamId, email, roleId }) {
-    const { inviterEmail, teamName } = await ctx.runQuery(
+    const { inviterEmail, teamName } = await ctx.runMutation(
       internal.users.teams.members.invites.prepare,
       { teamId }
     );
@@ -79,7 +81,7 @@ export const send = action({
   },
 });
 
-export const prepare = internalQuery({
+export const prepare = internalMutation({
   args: {
     teamId: v.id("teams"),
   },

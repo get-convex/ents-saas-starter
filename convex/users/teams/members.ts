@@ -1,6 +1,10 @@
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "../../functions";
-import { getRole, viewerHasPermissionX } from "../../permissions";
+import {
+  getRole,
+  viewerHasPermission,
+  viewerHasPermissionX,
+} from "../../permissions";
 import { Ent, QueryCtx } from "../../types";
 
 export const viewerPermissions = query({
@@ -27,10 +31,13 @@ export const list = query({
     teamId: v.optional(v.id("teams")),
   },
   async handler(ctx, { teamId }) {
-    if (teamId === undefined || ctx.viewer === null) {
+    if (
+      teamId === undefined ||
+      ctx.viewer === null ||
+      !(await viewerHasPermission(ctx, teamId, "Read Members"))
+    ) {
       return null;
     }
-    await viewerHasPermissionX(ctx, teamId, "Read Members");
     return await ctx
       .table("teams")
       .getX(teamId)
@@ -47,8 +54,10 @@ export const list = query({
               ? user.fullName[0]
               : user.firstName[0] + user.lastName[0],
           roleId: member.roleId,
+          isDeleted: member.deletionTime !== undefined,
         };
-      });
+      })
+      .filter((member) => !member.isDeleted);
   },
 });
 
@@ -85,6 +94,7 @@ async function checkAnotherAdminExists(ctx: QueryCtx, member: Ent<"members">) {
     .edge("members")
     .filter((q) =>
       q.and(
+        q.eq(q.field("deletionTime"), undefined),
         q.eq(q.field("roleId"), adminRole._id),
         q.neq(q.field("_id"), member._id)
       )

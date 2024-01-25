@@ -47,11 +47,23 @@ export const accept = mutation({
   async handler(ctx, { inviteId }) {
     const invite = await ctx.table("invites").getX(inviteId);
     checkViewerWasInvited(ctx, invite);
-    await ctx.table("members").insert({
-      teamId: invite.teamId,
-      userId: ctx.viewerX()._id,
-      roleId: invite.roleId,
-    });
+    const existingMember = await ctx
+      .table("members", "teamUser", (q) =>
+        q.eq("teamId", invite.teamId).eq("userId", ctx.viewerX()._id)
+      )
+      .unique();
+    if (existingMember !== null) {
+      await existingMember.patch({
+        deletionTime: undefined,
+        roleId: invite.roleId,
+      });
+    } else {
+      await ctx.table("members").insert({
+        teamId: invite.teamId,
+        userId: ctx.viewerX()._id,
+        roleId: invite.roleId,
+      });
+    }
     await invite.delete();
     return (await invite.edge("team")).slug;
   },
