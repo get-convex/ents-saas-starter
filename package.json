@@ -50,7 +50,7 @@
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",
     "convex": "^1.8.0",
-    "convex-ents": "^0.3.0",
+    "convex-ents": "^0.4.0",
     "convex-helpers": "0.1.9",
     "date-fns": "^2.30.0",
     "eslint": "8.49.0",

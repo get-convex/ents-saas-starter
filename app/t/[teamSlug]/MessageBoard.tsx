@@ -6,7 +6,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/convex/_generated/api";
 import { cn } from "@/lib/utils";
 import { useMutation, usePaginatedQuery } from "convex/react";
-import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
 
 export function MessageBoard() {
