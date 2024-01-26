@@ -28,11 +28,17 @@ const schema = defineEntSchema(
       .edges("members", { ref: true, deletion: "soft" })
       .deletion("soft"),
 
-    members: defineEnt({})
+    members: defineEnt({
+      searchable: v.string(),
+    })
       .edge("team")
       .edge("user")
       .edge("role")
       .index("teamUser", ["teamId", "userId"])
+      .searchIndex("searchable", {
+        searchField: "searchable",
+        filterFields: ["teamId"],
+      })
       .edges("messages", { ref: true })
       .deletion("soft"),
 

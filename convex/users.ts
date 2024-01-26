@@ -1,6 +1,7 @@
 import { mutation } from "./functions";
 import { getRole } from "./permissions";
 import { defaultToAccessTeamSlug, getUniqueSlug } from "./users/teams";
+import { createMember } from "./users/teams/members";
 
 export const store = mutation({
   args: {},
@@ -39,9 +40,9 @@ export const store = mutation({
     const teamId = await ctx
       .table("teams")
       .insert({ name, slug, isPersonal: true });
-    await ctx.table("members").insert({
-      teamId: teamId,
-      userId: user._id,
+    await createMember(ctx, {
+      teamId,
+      user,
       roleId: (await getRole(ctx, "Admin"))._id,
     });
     return slug;

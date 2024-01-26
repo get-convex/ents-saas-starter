@@ -1,7 +1,7 @@
 import { api } from "@/convex/_generated/api";
-import { useQuery } from "convex/react";
+import { UsePaginatedQueryResult, useQuery } from "convex/react";
 import { useParams, usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export function useCurrentTeam() {
   const router = useRouter();
@@ -26,4 +26,20 @@ export function useViewerPermissions() {
     teamId: team?._id,
   });
   return permissions == null ? null : new Set(permissions);
+}
+
+export function useStaleValue<T>(value: T | undefined) {
+  const stored = useRef(value);
+  if (value !== undefined) {
+    stored.current = value;
+  }
+  return { value: stored.current, stale: value !== stored.current };
+}
+
+export function useStalePaginationValue<T>(value: UsePaginatedQueryResult<T>) {
+  const stored = useRef(value);
+  if (value.results.length > 0 || !value.isLoading) {
+    stored.current = value;
+  }
+  return { value: stored.current, stale: value !== stored.current };
 }

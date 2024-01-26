@@ -3,6 +3,7 @@ import { mutation, query } from "../functions";
 import { getRole, viewerHasPermissionX } from "../permissions";
 import { Ent, QueryCtx } from "../types";
 import { slugify } from "../utils";
+import { createMember } from "./teams/members";
 
 export async function defaultToAccessTeamSlug(viewer: Ent<"users">) {
   return (
@@ -45,9 +46,9 @@ export const create = mutation({
     const teamId = await ctx
       .table("teams")
       .insert({ name, isPersonal: false, slug });
-    await ctx.table("members").insert({
-      teamId: teamId,
-      userId: ctx.viewerX()._id,
+    await createMember(ctx, {
+      teamId,
+      user: ctx.viewerX(),
       roleId: (await getRole(ctx, "Admin"))._id,
     });
     return slug;

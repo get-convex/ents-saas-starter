@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { mutation, query } from "./functions";
 import { Ent, QueryCtx } from "./types";
+import { createMember } from "./users/teams/members";
 
 export const list = query({
   args: {},
@@ -58,10 +59,10 @@ export const accept = mutation({
         roleId: invite.roleId,
       });
     } else {
-      await ctx.table("members").insert({
+      await createMember(ctx, {
         teamId: invite.teamId,
-        userId: ctx.viewerX()._id,
         roleId: invite.roleId,
+        user: ctx.viewerX(),
       });
     }
     await invite.delete();
