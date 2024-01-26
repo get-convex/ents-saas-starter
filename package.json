@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.3",
+    "@clerk/themes": "^1.7.9",
     "@hookform/resolvers": "^3.3.2",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.0.5",
@@ -68,6 +69,7 @@
     "tailwindcss": "3.3.3",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.3.3",
+    "usehooks-ts": "^2.10.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {

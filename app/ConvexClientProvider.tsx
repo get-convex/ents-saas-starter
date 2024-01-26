@@ -1,18 +1,23 @@
 "use client";
 
-import { ReactNode, useEffect } from "react";
+import { api } from "@/convex/_generated/api";
+import { ClerkProvider, useAuth, useUser } from "@clerk/nextjs";
 import { Authenticated, ConvexReactClient, useMutation } from "convex/react";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
-import { ClerkProvider, useAuth, useUser } from "@clerk/nextjs";
+import { ReactNode, useEffect } from "react";
+import { useMediaQuery } from "usehooks-ts";
 import { ErrorBoundary } from "./ErrorBoundary";
-import { api } from "@/convex/_generated/api";
+import { dark } from "@clerk/themes";
 
 const convex = new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
 export function ConvexClientProvider({ children }: { children: ReactNode }) {
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   return (
     <ErrorBoundary>
-      <ClerkProvider>
+      <ClerkProvider
+        appearance={{ baseTheme: prefersDarkMode ? dark : undefined }}
+      >
         <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
           <Authenticated>
             <StoreUserInDatabase />
