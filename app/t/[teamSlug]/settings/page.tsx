@@ -2,6 +2,7 @@
 
 import { useCurrentTeam, useViewerPermissions } from "@/app/t/[teamSlug]/hooks";
 import { DeleteTeamDialog } from "@/app/t/[teamSlug]/settings/DeleteTeamDialog";
+import { SettingsMenuButton } from "@/app/t/[teamSlug]/settings/SettingsMenuButton";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -26,9 +27,12 @@ export default function GeneralSettingsPage() {
   };
   return (
     <>
-      <h1 className="text-4xl font-extrabold mt-8">
-        {team.isPersonal ? <>Account Settings</> : <>Team Settings</>}
-      </h1>
+      <div className="flex items-center mt-8">
+        <SettingsMenuButton />
+        <h1 className="text-4xl font-extrabold">
+          {team.isPersonal ? <>Account Settings</> : <>Team Settings</>}
+        </h1>
+      </div>
       <Card disabled={!permissions.has("Delete Team")}>
         {team.isPersonal ? (
           <>
