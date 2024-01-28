@@ -47,6 +47,9 @@ export const create = mutation({
   },
   handler: async (ctx, { teamId, text }) => {
     const member = await viewerWithPermissionX(ctx, teamId, "Contribute");
+    if (text.trim().length === 0) {
+      throw new Error("Message must not be empty");
+    }
     await ctx.table("messages").insert({
       text,
       teamId: teamId,

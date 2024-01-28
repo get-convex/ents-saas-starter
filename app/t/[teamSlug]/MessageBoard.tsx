@@ -52,33 +52,42 @@ export function MessageBoard() {
           value={message}
           onChange={(event) => setMessage(event.target.value)}
         />
-        <Button type="submit">Send Message</Button>
+        <Button disabled={message.trim() === ""} type="submit">
+          Send Message
+        </Button>
       </form>
       <ScrollArea className="h-72 rounded-md border" onScroll={handleScroll}>
         <div className="p-4">
           {messages.map((message) => (
             <div key={message._id} className="text-sm">
-              <div>
+              <div className="flex">
                 {/*eslint-disable-next-line @next/next/no-img-element*/}
                 <img
                   src={message.authorPictureUrl}
                   alt="avatar"
                   className={cn(
-                    "rounded-full inline-block mr-2",
+                    "rounded-full inline-block mr-2 mt-[0.1875rem] w-8 h-8",
                     message.isAuthorDeleted && "grayscale"
                   )}
                   width={20}
                   height={20}
                 />
-                <span
-                  className={cn(
-                    "font-semibold",
-                    message.isAuthorDeleted && "text-muted-foreground"
-                  )}
-                >
-                  {message.author}:
-                </span>{" "}
-                {message.text}
+                <div>
+                  <div>
+                    <span
+                      className={cn(
+                        "font-semibold",
+                        message.isAuthorDeleted && "text-muted-foreground"
+                      )}
+                    >
+                      {message.author}
+                    </span>{" "}
+                    <span className="text-muted-foreground text-xs whitespace-nowrap self-end">
+                      {formatDateTime(message._creationTime)}
+                    </span>
+                  </div>
+                  {message.text}
+                </div>
               </div>
               <Separator className="my-2" />
             </div>
@@ -92,4 +101,23 @@ export function MessageBoard() {
       </ScrollArea>
     </div>
   );
+}
+
+const FULL_DATE_TIME_FORMAT = new Intl.DateTimeFormat(undefined, {
+  timeStyle: "short",
+  dateStyle: "short",
+});
+
+const TIME_FORMAT = new Intl.DateTimeFormat(undefined, {
+  timeStyle: "short",
+});
+
+function formatDateTime(timestamp: number) {
+  const isToday =
+    new Date(timestamp).setHours(0, 0, 0, 0) ===
+    new Date().setHours(0, 0, 0, 0);
+  if (isToday) {
+    return TIME_FORMAT.format(timestamp);
+  }
+  return FULL_DATE_TIME_FORMAT.format(timestamp);
 }
