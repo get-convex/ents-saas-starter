@@ -40,6 +40,8 @@ Then:
    [Clerk Next.js quickstart](https://clerk.com/docs/quickstarts/nextjs#set-environment-keys),
    setting up both `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` in
    your `.env.local` file
+3. Run `npx convex run init:init` to initialize the permissions and roles in the
+   database
 
 If you want to sync Clerk user data via webhooks, check out this
 [example repo](https://github.com/thomasballinger/convex-clerk-users-table/).
