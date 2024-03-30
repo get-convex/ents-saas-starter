@@ -137,10 +137,16 @@ async function sendInviteEmail({
     from: "My App <onboarding@resend.dev>",
     to: [process.env.OVERRIDE_INVITE_EMAIL ?? email],
     subject: `${inviterEmail} invited you to join them in My App`,
-    html: `<div><strong>${inviterEmail}</strong> invited
-      you to join <strong>${teamName}</strong> in My App.
-      Click <a href="${process.env.HOSTED_URL}/t?${INVITE_PARAM}=${inviteId}">here to accept</a>
-      or log in to My App.`,
+    react: (
+      <div>
+        <strong>{inviterEmail}</strong> invited you to join team{" "}
+        <strong>{teamName}</strong> in My App. Click{" "}
+        <a href={`${process.env.HOSTED_URL}/t?${INVITE_PARAM}=${inviteId}`}>
+          here to accept
+        </a>{" "}
+        or log in to My App.
+      </div>
+    ),
   });
 
   if (error) {
