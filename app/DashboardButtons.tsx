@@ -2,7 +2,7 @@
 
 import { ErrorBoundary } from "@/app/ErrorBoundary";
 import { Button } from "@/components/ui/button";
-import { SignInButton, SignUpButton } from "@clerk/clerk-react";
+import { SignInButton, SignUpButton } from "@clerk/nextjs";
 import {
   ClerkLoading,
   ClerkProvider,
@@ -23,10 +23,10 @@ export function DashboardButtons() {
         </SignedIn>
         <SignedOut>
           <div className="flex gap-4 animate-[fade-in_0.2s]">
-            <SignInButton mode="modal" redirectUrl="/t">
+            <SignInButton mode="modal" forceRedirectUrl="/t">
               <Button variant="ghost">Sign in</Button>
             </SignInButton>
-            <SignUpButton mode="modal" redirectUrl="/t">
+            <SignUpButton mode="modal" forceRedirectUrl="/t">
               <Button>Sign up</Button>
             </SignUpButton>
           </div>

@@ -7,7 +7,7 @@ export const vPermission = v.union(
   v.literal("Delete Team"),
   v.literal("Read Members"),
   v.literal("Manage Members"),
-  v.literal("Contribute")
+  v.literal("Contribute"),
 );
 export type Permission = Infer<typeof vPermission>;
 
@@ -25,11 +25,11 @@ export async function getRole(ctx: QueryCtx, name: Role) {
 export async function viewerWithPermission(
   ctx: QueryCtx,
   teamId: Id<"teams">,
-  name: Permission
+  name: Permission,
 ) {
   const member = await ctx
     .table("members", "teamUser", (q) =>
-      q.eq("teamId", teamId).eq("userId", ctx.viewerX()._id)
+      q.eq("teamId", teamId).eq("userId", ctx.viewerX()._id),
     )
     .unique();
   if (
@@ -48,7 +48,7 @@ export async function viewerWithPermission(
 export async function viewerHasPermission(
   ctx: QueryCtx,
   teamId: Id<"teams">,
-  name: Permission
+  name: Permission,
 ) {
   const member = await viewerWithPermission(ctx, teamId, name);
   return member !== null;
@@ -57,7 +57,7 @@ export async function viewerHasPermission(
 export async function viewerWithPermissionX(
   ctx: MutationCtx,
   teamId: Id<"teams">,
-  name: Permission
+  name: Permission,
 ) {
   const member = await viewerWithPermission(ctx, teamId, name);
   if (member === null) {
@@ -69,7 +69,7 @@ export async function viewerWithPermissionX(
 export async function viewerHasPermissionX(
   ctx: MutationCtx,
   teamId: Id<"teams">,
-  name: Permission
+  name: Permission,
 ) {
   await viewerWithPermissionX(ctx, teamId, name);
   return true;

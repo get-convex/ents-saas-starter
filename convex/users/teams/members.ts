@@ -20,7 +20,7 @@ export const viewerPermissions = query({
     }
     return await ctx
       .table("members", "teamUser", (q) =>
-        q.eq("teamId", teamId).eq("userId", ctx.viewerX()._id)
+        q.eq("teamId", teamId).eq("userId", ctx.viewerX()._id),
       )
       .uniqueX()
       .edge("role")
@@ -50,7 +50,7 @@ export const list = query({
             .search("searchable", (q) =>
               q
                 .search("searchable", normalizeStringForSearch(search))
-                .eq("teamId", teamId)
+                .eq("teamId", teamId),
             );
     return await query
       .filter((q) => q.eq(q.field("deletionTime"), undefined))
@@ -107,8 +107,8 @@ async function checkAnotherAdminExists(ctx: QueryCtx, member: Ent<"members">) {
       q.and(
         q.eq(q.field("deletionTime"), undefined),
         q.eq(q.field("roleId"), adminRole._id),
-        q.neq(q.field("_id"), member._id)
-      )
+        q.neq(q.field("_id"), member._id),
+      ),
     )
     .first();
   if (otherAdmin === null) {
@@ -122,7 +122,7 @@ export async function createMember(
     teamId,
     roleId,
     user,
-  }: { teamId: Id<"teams">; roleId: Id<"roles">; user: Ent<"users"> }
+  }: { teamId: Id<"teams">; roleId: Id<"roles">; user: Ent<"users"> },
 ) {
   return await ctx.table("members").insert({
     teamId,
