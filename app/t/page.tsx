@@ -13,5 +13,6 @@ export default async function DashboardPage({
   const queryString = invite !== undefined ? `?${INVITE_PARAM}=${invite}` : "";
   const token = await getAuthToken();
   const teamSlug = await fetchMutation(api.users.store, {}, { token });
+  console.log("Am i even here?", `/t/${teamSlug}${queryString}`);
   redirect(`/t/${teamSlug}${queryString}`);
 }
