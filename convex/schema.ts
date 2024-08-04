@@ -66,8 +66,9 @@ const schema = defineEntSchema(
     })
       .edge("team")
       .edge("member"),
+    as: defineEnt({ ["b"]: v.any() }).index("b", ["b"]),
   },
-  { schemaValidation: false }
+  { schemaValidation: false },
 );
 
 export default schema;

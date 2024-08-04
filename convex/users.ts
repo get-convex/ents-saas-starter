@@ -1,4 +1,4 @@
-import { mutation } from "./functions";
+import { internalMutation, mutation } from "./functions";
 import { getRole } from "./permissions";
 import { defaultToAccessTeamSlug, getUniqueSlug } from "./users/teams";
 import { createMember } from "./users/teams/members";
@@ -52,3 +52,10 @@ export const store = mutation({
 function emailUserName(email: string) {
   return email.split("@")[0];
 }
+
+export const foo = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    await ctx.table("as", "b", (q) => q.eq("_creationTime" as any, 3 as any));
+  },
+});
