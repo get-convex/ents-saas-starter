@@ -1,20 +1,17 @@
 "use client";
 
-import { Skeleton } from "@/components/ui/skeleton";
-import { UserButton } from "@clerk/clerk-react";
-import { AuthLoading, Authenticated } from "convex/react";
+import { Button } from "@/components/ui/button";
+import { useAuthActions } from "@convex-dev/auth/react";
 
 export function ProfileButton() {
   return (
     <div className="flex gap-4">
-      <AuthLoading>
-        <Skeleton className="w-8 h-8 rounded-full" />
-      </AuthLoading>
-      <Authenticated>
-        <div className="w-8 h-8">
-          <UserButton afterSignOutUrl="/" />
-        </div>
-      </Authenticated>
+      <SignOutButton />
     </div>
   );
+}
+
+function SignOutButton() {
+  const { signOut } = useAuthActions();
+  return <Button onClick={() => void signOut()}>Sign out</Button>;
 }

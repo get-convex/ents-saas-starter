@@ -19,7 +19,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "convex-gold-nextjs": ["./lib/convex-gold-nextjs/index"],
+      "convex-gold-nextjs/*": ["./lib/convex-gold-nextjs/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

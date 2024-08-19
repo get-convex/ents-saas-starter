@@ -6,25 +6,36 @@ import { viewerHasPermission, viewerWithPermissionX } from "../../permissions";
 export const list = query({
   args: {
     teamId: v.id("teams"),
-    paginationOpts: paginationOptsValidator,
+    // TODO:
+    // paginationOpts: paginationOptsValidator,
   },
-  handler: async (ctx, { teamId, paginationOpts }) => {
+  handler: async (
+    ctx,
+    {
+      teamId,
+      // TODO:
+      // paginationOpts
+    },
+  ) => {
     if (
       ctx.viewer === null ||
       !(await viewerHasPermission(ctx, teamId, "Contribute"))
     ) {
-      return {
-        page: [],
-        isDone: true,
-        continueCursor: "",
-      };
+      return [];
+      // TODO:
+      // return {
+      //   page: [],
+      //   isDone: true,
+      //   continueCursor: "",
+      // };
     }
     return await ctx
       .table("teams")
       .getX(teamId)
       .edge("messages")
       .order("desc")
-      .paginate(paginationOpts)
+      // TODO:
+      // .paginate(paginationOpts)
       .map(async (message) => {
         const member = await message.edge("member");
         const user = await member.edge("user");

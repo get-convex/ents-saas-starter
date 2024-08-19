@@ -1,5 +1,7 @@
 import { api } from "@/convex/_generated/api";
-import { UsePaginatedQueryResult, useQuery } from "convex/react";
+import { useQuery } from "convex-gold-nextjs";
+import { UsePaginatedQueryResult } from "convex/react";
+// import { useQuery } from "convex/react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 
@@ -13,7 +15,7 @@ export function useCurrentTeam() {
   useEffect(() => {
     if (currentTeam !== undefined && currentTeam.slug !== teamSlug) {
       router.push(
-        `/t/${currentTeam.slug}/${pathname.split("/").slice(3).join("/")}`
+        `/t/${currentTeam.slug}/${pathname.split("/").slice(3).join("/")}`,
       );
     }
   }, [currentTeam, pathname, router, teamSlug]);

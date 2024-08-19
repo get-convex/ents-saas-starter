@@ -4,36 +4,49 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/convex/_generated/api";
+import { useQuery } from "convex-gold-nextjs";
+// import { useQuery } from "convex/react";
 import { cn } from "@/lib/utils";
-import { useMutation, usePaginatedQuery } from "convex/react";
+import { useMutation } from "convex/react";
 import { useCallback, useRef, useState } from "react";
 
 export function MessageBoard() {
   const team = useCurrentTeam();
-  const {
-    results: messages,
-    loadMore,
-    status,
-  } = usePaginatedQuery(
-    api.users.teams.messages.list,
-    team == null ? "skip" : { teamId: team._id },
-    { initialNumItems: 10 }
-  );
+  const messages =
+    useQuery(
+      api.users.teams.messages.list,
+      team == null ? "skip" : { teamId: team._id },
+    ) ?? [];
+  // TODO:
+  // const {
+  //   results: messages,
+  //   loadMore,
+  //   status,
+  // } = usePaginatedQuery(
+  //   api.users.teams.messages.list,
+  //   team == null ? "skip" : { teamId: team._id },
+  //   { initialNumItems: 10 },
+  // );
   const [message, setMessage] = useState("");
   const sendMessage = useMutation(api.users.teams.messages.create);
   const listRef = useRef<HTMLElement>(null);
-  const handleScroll = useCallback(() => {
-    if (listRef.current === null) {
-      return;
-    }
-    const { scrollTop, scrollHeight, clientHeight } = listRef.current;
-    if (
-      scrollHeight - scrollTop <= clientHeight * 1.5 &&
-      status === "CanLoadMore"
-    ) {
-      loadMore(10);
-    }
-  }, [loadMore, status]);
+  const handleScroll = useCallback(
+    () => {
+      //   if (listRef.current === null) {
+      //     return;
+      //   }
+      //   const { scrollTop, scrollHeight, clientHeight } = listRef.current;
+      //   if (
+      //     scrollHeight - scrollTop <= clientHeight * 1.5 &&
+      //     status === "CanLoadMore"
+      //   ) {
+      //     loadMore(10);
+      //   }
+    },
+    [
+      // loadMore, status
+    ],
+  );
 
   return (
     <div className="max-w-xl flex flex-col gap-2 mt-8">
@@ -62,7 +75,7 @@ export function MessageBoard() {
             <div key={message._id} className="text-sm">
               <div className="flex">
                 {/*eslint-disable-next-line @next/next/no-img-element*/}
-                <img
+                {/* <img
                   src={message.authorPictureUrl}
                   alt="avatar"
                   className={cn(
@@ -71,13 +84,13 @@ export function MessageBoard() {
                   )}
                   width={20}
                   height={20}
-                />
+                /> */}
                 <div>
                   <div>
                     <span
                       className={cn(
                         "font-semibold",
-                        message.isAuthorDeleted && "text-muted-foreground"
+                        message.isAuthorDeleted && "text-muted-foreground",
                       )}
                     >
                       {message.author}

@@ -1,4 +1,10 @@
-import { defineEnt, defineEntSchema, getEntDefinitions } from "convex-ents";
+import { authTables } from "@convex-dev/auth/server";
+import {
+  defineEnt,
+  defineEntSchema,
+  defineEntsFromTables,
+  getEntDefinitions,
+} from "convex-ents";
 import { v } from "convex/values";
 import { vPermission, vRole } from "./permissions";
 
@@ -7,6 +13,7 @@ const TEAM_DELETION_DELAY_MS = 7 * 24 * 60 * 60 * 1000;
 
 const schema = defineEntSchema(
   {
+    ...defineEntsFromTables(authTables),
     teams: defineEnt({
       name: v.string(),
       isPersonal: v.boolean(),
@@ -24,7 +31,7 @@ const schema = defineEntSchema(
       pictureUrl: v.optional(v.string()),
     })
       .field("email", v.string(), { unique: true })
-      .field("tokenIdentifier", v.string(), { unique: true })
+      .field("username", v.string(), { unique: true })
       .edges("members", { ref: true, deletion: "soft" })
       .deletion("soft"),
 

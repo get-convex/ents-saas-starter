@@ -1,16 +1,20 @@
 import { v } from "convex/values";
 import { mutation, query } from "../functions";
 import { getRole, viewerHasPermissionX } from "../permissions";
-import { Ent, QueryCtx } from "../types";
+import { QueryCtx } from "../types";
 import { slugify } from "../utils";
 import { createMember } from "./teams/members";
 
-export async function defaultToAccessTeamSlug(viewer: Ent<"users">) {
-  return (
-    await viewer.edge("members").map((member) => member.edge("team").doc())
-  ).filter((team) => team.deletionTime === undefined && team.isPersonal)[0]!
-    .slug;
-}
+export const defaultTeamSlug = query({
+  args: {},
+  async handler(ctx) {
+    const viewer = ctx.viewerX();
+    return (
+      await viewer.edge("members").map((member) => member.edge("team").doc())
+    ).filter((team) => team.deletionTime === undefined && team.isPersonal)[0]
+      .slug;
+  },
+});
 
 export const list = query({
   args: {},

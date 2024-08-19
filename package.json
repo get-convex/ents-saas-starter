@@ -12,8 +12,9 @@
     "lint": "tsc && next lint"
   },
   "dependencies": {
-    "@clerk/nextjs": "^4.29.3",
+    "@auth/core": "^0.34.2",
     "@clerk/themes": "^1.7.9",
+    "@convex-dev/auth": "^0.0.54",
     "@hookform/resolvers": "^3.3.2",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.0.5",
@@ -42,6 +43,7 @@
     "@radix-ui/react-toast": "^1.1.5",
     "@radix-ui/react-toggle": "^1.0.3",
     "@radix-ui/react-tooltip": "^1.0.7",
+    "@react-email/components": "^0.0.22",
     "@types/node": "20.6.0",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
@@ -52,7 +54,7 @@
     "cmdk": "^0.2.0",
     "convex": "^1.13.2",
     "convex-ents": "^0.9.5",
-    "convex-helpers": "0.1.27",
+    "convex-helpers": "^0.1.50",
     "date-fns": "^2.30.0",
     "eslint": "8.49.0",
     "eslint-config-next": "13.4.19",

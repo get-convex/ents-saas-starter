@@ -1,38 +1,17 @@
-"use client";
-
-import { ErrorBoundary } from "@/app/ErrorBoundary";
+import { SignInButton } from "@/app/SignInButton";
+import { SignUpButton } from "@/app/SignUpButton";
 import { Button } from "@/components/ui/button";
-import { SignInButton, SignUpButton } from "@clerk/clerk-react";
-import {
-  ClerkLoading,
-  ClerkProvider,
-  SignedIn,
-  SignedOut,
-} from "@clerk/nextjs";
+import { isAuthenticated } from "convex-gold-nextjs/server";
 import Link from "next/link";
 
 export function DashboardButtons() {
-  return (
-    <ErrorBoundary>
-      <ClerkProvider>
-        <ClerkLoading>
-          <div className="w-40 h-9" />
-        </ClerkLoading>
-        <SignedIn>
-          <OpenDashboardLinkButton />
-        </SignedIn>
-        <SignedOut>
-          <div className="flex gap-4 animate-[fade-in_0.2s]">
-            <SignInButton mode="modal" redirectUrl="/t">
-              <Button variant="ghost">Sign in</Button>
-            </SignInButton>
-            <SignUpButton mode="modal" redirectUrl="/t">
-              <Button>Sign up</Button>
-            </SignUpButton>
-          </div>
-        </SignedOut>
-      </ClerkProvider>
-    </ErrorBoundary>
+  return isAuthenticated() ? (
+    <OpenDashboardLinkButton />
+  ) : (
+    <div className="flex gap-4 animate-[fade-in_0.2s]">
+      <SignInButton />
+      <SignUpButton />
+    </div>
   );
 }
 
