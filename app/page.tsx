@@ -41,7 +41,11 @@ export default function Home() {
         <p>
           The frontend is powered by{" "}
           <Link href="https://nextjs.org" target="_blank">
-            Next.js 14 App Router
+            Next.js 15 App Router
+          </Link>
+          , and the backend is powered by{" "}
+          <Link href="https://clerk.com" target="_blank">
+            Clerk 6 Auth
           </Link>
           .
         </p>
