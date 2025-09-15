@@ -1,4 +1,6 @@
-# SaaS Starter: Convex + TypeScript + Next.js + Clerk + Tailwind + shadcn/ui
+# SaaS Starter: Convex + TypeScript + Next.js 15 + Clerk + Tailwind + shadcn/ui
+
+**🚀 Next.js 15 Upgrade Fork** - This is an upgraded version of the original SaaS starter with Next.js 15 and updated dependencies.
 
 Build your SaaS website in no time! Included:
 
@@ -10,6 +12,30 @@ Build your SaaS website in no time! Included:
 - User sign-in and sign-up with [Clerk](https://clerk.com)
 - Website router with [Next.js](https://nextjs.org/)
 - Slick UX with [shadcn/ui](https://ui.shadcn.com/)
+
+## What's New in This Fork
+
+This version upgrades the original SaaS starter to **Next.js 15** (the original used Next.js 14, which reaches end of support in October 2025) and includes significant dependency updates:
+
+### Major Upgrades
+- **Next.js**: `^14.1.0` → `15.5.3`
+- **@clerk/nextjs**: `^4.29.3` → `^6.32.0` (major version bump with new APIs)
+- **@clerk/themes**: `^1.7.9` → `^2.4.19`
+- **Convex**: `^1.13.2` → `^1.27.0`
+- **Convex Ents**: `^0.9.5` → `^0.16.0`
+- **Convex Helpers**: `0.1.27` → `^0.1.104`
+- **eslint-config-next**: `13.4.19` → `15.5.3`
+
+### Updated Dependencies
+- **@types/node**: `20.6.0` → `24.4.0`
+- **@types/react**: `18.2.21` → `18.3.1`
+- **@types/react-dom**: `18.2.7` → `18.3.1`
+- **TypeScript**: `^5.3.3` → `^5.5.0`
+- **React**: `18.2.0` → `18.3.1`
+- **React DOM**: `18.2.0` → `18.3.1`
+- All **@radix-ui** components updated to latest versions
+
+These updates ensure compatibility with the latest features and security patches, future-proofing your SaaS application.
 
 Check out [Convex docs](https://docs.convex.dev/home), and
 [Convex Ents docs](https://labs.convex.dev/convex-ents)
