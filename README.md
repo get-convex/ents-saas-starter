@@ -27,7 +27,7 @@ Check out [Convex docs](https://docs.convex.dev/home), and
 ## Setting up
 
 ```
-npm create convex@latest -- -t xixixao/saas-starter
+npx create-convex@latest  -t xixixao/saas-starter
 ```
 
 Then:
